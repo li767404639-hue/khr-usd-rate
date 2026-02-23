@@ -1,1 +1,84 @@
-（从 <!doctype html> 到 </html>）
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USD ⇄ KHR Converter</title>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    body { font-family: system-ui, Arial; margin: 20px; }
+    .card { max-width: 520px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 12px; }
+    h1 { font-size: 20px; }
+    .row { display:flex; gap:10px; margin:10px 0; }
+    input { flex:1; padding:10px; font-size:16px; }
+    button { padding:10px; }
+    .result { margin-top:15px; font-size:18px; }
+    .meta { color:#666; font-size:13px; margin-bottom:10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>USD ⇄ KHR Converter</h1>
+    <div class="meta" id="meta">Loading official rate...</div>
+
+    <div class="row">
+      <input id="amount" type="number" placeholder="Enter amount" />
+      <button id="swap">USD → KHR</button>
+    </div>
+
+    <div class="result" id="result">Enter amount</div>
+  </div>
+
+<script>
+let usdKhr = null;
+let mode = "USD2KHR";
+
+async function loadRate() {
+  try {
+    const r = await fetch('/api/rate');
+    const data = await r.json();
+    usdKhr = data.usd_khr;
+    document.getElementById("meta").innerText =
+      "Official daily rate (" + data.date + "): 1 USD = " + usdKhr + " KHR";
+  } catch {
+    document.getElementById("meta").innerText = "Failed to load rate";
+  }
+}
+
+function calculate() {
+  const amount = parseFloat(document.getElementById("amount").value);
+  if (!usdKhr || isNaN(amount)) {
+    document.getElementById("result").innerText = "Enter amount";
+    return;
+  }
+
+  if (mode === "USD2KHR") {
+    const khr = amount * usdKhr;
+    document.getElementById("result").innerText =
+      amount + " USD ≈ " + Math.round(khr) + " KHR";
+  } else {
+    const usd = amount / usdKhr;
+    document.getElementById("result").innerText =
+      amount + " KHR ≈ " + usd.toFixed(2) + " USD";
+  }
+}
+
+document.getElementById("amount").addEventListener("input", calculate);
+
+document.getElementById("swap").addEventListener("click", function() {
+  mode = mode === "USD2KHR" ? "KHR2USD" : "USD2KHR";
+  this.innerText = mode === "USD2KHR" ? "USD → KHR" : "KHR → USD";
+  calculate();
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
+}
+
+loadRate();
+</script>
+</body>
+</html>
