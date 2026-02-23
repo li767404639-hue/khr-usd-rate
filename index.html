@@ -125,7 +125,14 @@ if ('serviceWorker' in navigator) {
 navigator.serviceWorker.register('/service-worker.js');
 }
 
-setLang("en");
+// 自动检测浏览器语言
+const browserLang = navigator.language || navigator.userLanguage;
+
+if (browserLang.startsWith("km")) {
+    setLang("km");
+} else {
+    setLang("en");
+}
 loadRate();
 </script>
 
