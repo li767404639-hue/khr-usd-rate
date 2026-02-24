@@ -88,6 +88,36 @@ document.getElementById("swap").innerText = translations[currentLang].swap2;
 }
 
 async function loadRate() {
+  const metaEl = document.getElementById("meta");
+  try {
+    // 10秒超时，避免一直Loading
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+
+    const r = await fetch("/api/rate?ts=" + Date.now(), {
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    clearTimeout(timer);
+
+    if (!r.ok) throw new Error("HTTP_" + r.status);
+
+    const data = await r.json();
+    usdKhr = data.usd_khr;
+
+    metaEl.innerText =
+      "Official daily reference rate (" + data.date + "): 1 USD = " + usdKhr + " KHR (for reference only)";
+  } catch (e) {
+    metaEl.innerText = "Failed to load rate. Tap to retry.";
+    // 点一下重试
+    metaEl.style.cursor = "pointer";
+    metaEl.onclick = () => {
+      metaEl.innerText = "Loading official rate...";
+      loadRate();
+    };
+  }
+}
 try {
 const r = await fetch('/api/rate');
 const data = await r.json();
@@ -137,7 +167,7 @@ if (browserLang.startsWith("km")) {
 } else {
     setLang("en");
 }
-loadRate();
+
 // ---- PWA Install Hint (iOS/Android) ----
 (function () {
   try {
