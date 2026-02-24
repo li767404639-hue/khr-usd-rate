@@ -140,7 +140,7 @@ loadRate();
 // ---- PWA Install Hint (iOS/Android) ----
 (function () {
   try {
-    const key = "a2hs_hint_dismissed";
+    const key = "a2hs_hint_dismissed_v2";
     if (localStorage.getItem(key) === "1") return;
 
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
