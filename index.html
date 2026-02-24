@@ -89,8 +89,12 @@ document.getElementById("swap").innerText = translations[currentLang].swap2;
 
 async function loadRate() {
   const metaEl = document.getElementById("meta");
+  if (!metaEl) {
+    alert('Bug: element id="meta" not found in HTML');
+    return;
+  }
+
   try {
-    // 10秒超时，避免一直Loading
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10000);
 
@@ -108,14 +112,16 @@ async function loadRate() {
 
     metaEl.innerText =
       "Official daily reference rate (" + data.date + "): 1 USD = " + usdKhr + " KHR (for reference only)";
+    metaEl.onclick = null;
+    metaEl.style.cursor = "default";
   } catch (e) {
     metaEl.innerText = "Failed to load rate. Tap to retry.";
-    // 点一下重试
     metaEl.style.cursor = "pointer";
     metaEl.onclick = () => {
       metaEl.innerText = "Loading official rate...";
       loadRate();
     };
+    console.error(e);
   }
 }
 try {
