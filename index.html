@@ -74,7 +74,8 @@ function setLang(lang){
 currentLang = lang;
 document.getElementById("title").innerText = translations[lang].title;
 document.getElementById("amount").placeholder = translations[lang].enter;
-document.getElementById("meta").innerText = translations[lang].loading;
+document.getElementById("meta").innerText =
+"Official daily reference rate (" + data.date + "): 1 USD = " + usdKhr + " KHR (for reference only)";
 updateSwapText();
 }
 
