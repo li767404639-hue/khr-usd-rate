@@ -49,6 +49,11 @@ button { padding:10px; }
 </div>
 
 <script>
+// DEBUG: 页面是否跑到JS了？
+document.body.insertAdjacentHTML(
+  "afterbegin",
+  '<div id="dbg" style="position:fixed;top:8px;left:8px;z-index:99999;background:#ff0;padding:6px 8px;font-size:12px;border:1px solid #000;">JS: start</div>'
+);
 let usdKhr = null;
 let mode = "USD2KHR";
 let currentLang = "en";
@@ -206,7 +211,11 @@ if (browserLang.startsWith("km")) {
   } catch {}
 })();
 window.addEventListener("load", loadRate);
-  
+window.addEventListener("DOMContentLoaded", () => {
+  const d = document.getElementById("dbg");
+  if (d) d.textContent = "JS: DOM ready, calling loadRate()";
+  loadRate();
+});
 </script>
 
 <div style="text-align:center;margin-top:30px;font-size:12px;">
