@@ -1,4 +1,4 @@
-const CACHE = "khr-usd-v4";
+const CACHE = "khr-usd-v6";
 const ASSETS = ["/", "/index.html", "/manifest.json", "/privacy.html", "/terms.html", "/disclaimer.html"];
 
 self.addEventListener("install", (e) => {
