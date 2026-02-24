@@ -1,5 +1,5 @@
 const CACHE = "khr-usd-v2";
-const ASSETS = ["/", "/index.html", "/manifest.json"];
+const ASSETS = ["/", "/index.html", "/manifest.json", "/privacy.html", "/terms.html", "/disclaimer.html"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
