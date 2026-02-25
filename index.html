@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>USD ⇄ KHR Converter</title>
+
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -9,9 +13,6 @@
   gtag('js', new Date());
   gtag('config', 'G-3BT4GY2B36');
 </script>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>USD ⇄ KHR Converter</title>
 
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
@@ -147,6 +148,11 @@ const usd = amount / usdKhr;
 document.getElementById("result").innerText =
 amount + " KHR ≈ " + usd.toFixed(2) + " USD";
 }
+
+// GA 事件统计
+gtag('event', 'calculate', {
+  currency_mode: mode
+});
 }
 
 document.getElementById("amount").addEventListener("input", calculate);
@@ -161,7 +167,6 @@ if ('serviceWorker' in navigator) {
 navigator.serviceWorker.register('/service-worker.js');
 }
 
-// 自动语言检测
 const browserLang = navigator.language || navigator.userLanguage;
 if (browserLang && browserLang.startsWith("km")) {
 setLang("km");
@@ -169,7 +174,6 @@ setLang("km");
 setLang("en");
 }
 
-// 页面加载完成后调用
 window.addEventListener("DOMContentLoaded", () => {
 loadRate();
 });
