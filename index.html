@@ -109,14 +109,17 @@
 </div>
 
 <script>
-  // --------- Config ----------
-  const DEFAULT_AMOUNT_USD = 50;
-  const QUICK_USD = [50, 75, 120];
+  // --------- Quick amounts (auto-switch by From currency) ----------
+  const QUICK_AMOUNTS = {
+    USD: [50, 75, 120],
+    KHR: [50000, 100000, 200000],
+    CNY: [100, 300, 500]
+  };
 
   // --------- State ----------
   let currentLang = "en";
-  let usd_khr = null; // number
-  let usd_cny = null; // number
+  let usd_khr = null; // 1 USD = ? KHR
+  let usd_cny = null; // 1 USD = ? CNY
   let lastRateText = ""; // for copy
 
   const translations = {
@@ -163,18 +166,23 @@
     btn.disabled = !enabled;
   }
 
+  function currencyLabel(code){
+    return code === "CNY" ? "RMB" : code;
+  }
+
   function renderQuickButtons(){
     const wrap = document.getElementById("quickButtons");
     wrap.innerHTML = "";
 
     const from = document.getElementById("from").value;
-    if (from !== "USD") return; // 仅 From=USD 时显示快捷 USD
+    const arr = QUICK_AMOUNTS[from] || [];
+    if (!arr.length) return;
 
-    QUICK_USD.forEach(v => {
+    arr.forEach(v => {
       const b = document.createElement("button");
       b.className = "mini";
       b.type = "button";
-      b.textContent = `${v} USD`;
+      b.textContent = `${v.toLocaleString()} ${currencyLabel(from)}`;
       b.onclick = () => {
         document.getElementById("amount").value = v;
         calculate(true, "quick");
@@ -183,11 +191,17 @@
     });
   }
 
-  // 计算 from->to 的汇率（基于 usd_khr 和 usd_cny 桥接）
+  function setDefaultAmountByFrom(){
+    const from = document.getElementById("from").value;
+    const defaults = QUICK_AMOUNTS[from] || [];
+    if (defaults.length) {
+      document.getElementById("amount").value = defaults[0];
+    }
+  }
+
+  // Rate for from->to (bridge via USD using usd_khr & usd_cny)
   function getRate(from, to){
     if (from === to) return 1;
-
-    // 必须先有 USD 基础到 KHR/CNY
     if (usd_khr == null || usd_cny == null) return null;
 
     // USD -> X
@@ -216,11 +230,11 @@
 
     const converted = amount * rate;
 
-    // KHR 通常不用小数；USD/CNY 保留两位
-    const dec = (to === "KHR") ? 0 : 2;
+    const leftDec = (from === "KHR") ? 0 : 2;
+    const rightDec = (to === "KHR") ? 0 : 2;
 
-    const left = `${formatNumber(amount, (from === "KHR") ? 0 : 2)} ${from}`;
-    const right = `${formatNumber(converted, dec)} ${to}`;
+    const left = `${formatNumber(amount, leftDec)} ${currencyLabel(from)}`;
+    const right = `${formatNumber(converted, rightDec)} ${currencyLabel(to)}`;
     return `${left} ≈ ${right}`;
   }
 
@@ -315,14 +329,12 @@
       usd_cny = d2 && d2.rates ? d2.rates.CNY : null;
       if (usd_cny == null) throw new Error("CNY_MISSING");
 
-      // Meta display
       metaEl.innerText =
         `Rates loaded: 1 USD = ${Math.round(usd_khr)} KHR | 1 USD = ${formatNumber(usd_cny, 4)} CNY (for reference only)`;
 
-      // default amount + quick buttons
       renderQuickButtons();
       if (!document.getElementById("amount").value) {
-        document.getElementById("amount").value = DEFAULT_AMOUNT_USD;
+        setDefaultAmountByFrom();
       }
       calculate(false);
 
@@ -341,25 +353,29 @@
     fromEl.value = toEl.value;
     toEl.value = tmp;
 
-    // 避免出现 From=To
+    // avoid From=To
     if (fromEl.value === toEl.value){
       toEl.value = (fromEl.value === "USD") ? "KHR" : "USD";
     }
 
     renderQuickButtons();
+    setDefaultAmountByFrom();
     calculate(true, "swap_pair");
   }
 
   // Events
   document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
+
   document.getElementById("from").addEventListener("change", () => {
-    // 如果变成 From=To，自动修正
+    // avoid From=To
     if (document.getElementById("from").value === document.getElementById("to").value){
       document.getElementById("to").value = (document.getElementById("from").value === "USD") ? "KHR" : "USD";
     }
     renderQuickButtons();
+    setDefaultAmountByFrom();
     calculate(true, "change_from");
   });
+
   document.getElementById("to").addEventListener("change", () => {
     if (document.getElementById("from").value === document.getElementById("to").value){
       document.getElementById("from").value = (document.getElementById("to").value === "USD") ? "KHR" : "USD";
@@ -367,6 +383,7 @@
     renderQuickButtons();
     calculate(true, "change_to");
   });
+
   document.getElementById("swap").addEventListener("click", swapFromTo);
   document.getElementById("copy").addEventListener("click", copyResult);
 
@@ -383,6 +400,10 @@
   // Default pair: USD -> KHR
   document.getElementById("from").value = "USD";
   document.getElementById("to").value = "KHR";
+
+  // Default amount based on From
+  setDefaultAmountByFrom();
+  renderQuickButtons();
 
   // Init
   window.addEventListener("DOMContentLoaded", () => {
