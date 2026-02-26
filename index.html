@@ -5,251 +5,688 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Currency Converter</title>
 
+<!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
 <script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-3BT4GY2B36');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-3BT4GY2B36');
 </script>
 
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0B1F4A">
+
 <style>
-body{
-  margin:0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-  background:#f4f7fb;
-}
+  :root{
+    --bg:#F3F6FB;
+    --card:#FFFFFF;
+    --text:#0F172A;
+    --muted:#6B7280;
+    --line:#E5E7EB;
+    --primary:#0B1F4A;
+    --primary2:#123A8A;
+    --btnText:#FFFFFF;
+    --chip:#EEF2FF;
+    --chipText:#1E3A8A;
+  }
 
-.container{
-  max-width:680px;
-  margin:40px auto;
-  padding:20px;
-}
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    background: radial-gradient(1200px 600px at 20% 0%, #EAF0FF 0%, var(--bg) 45%, var(--bg) 100%);
+    color:var(--text);
+  }
 
-.card{
-  background:#ffffff;
-  border-radius:16px;
-  padding:24px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.06);
-}
+  .wrap{
+    max-width:760px;
+    margin:28px auto;
+    padding:0 16px 28px;
+  }
 
-h1{
-  font-size:20px;
-  margin:0 0 10px;
-  color:#1a1f36;
-}
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+  }
 
-.meta{
-  font-size:12px;
-  color:#6b7280;
-  margin-bottom:16px;
-}
+  .brand{
+    display:flex; gap:10px; align-items:center;
+  }
 
-.result-big{
-  font-size:32px;
-  font-weight:600;
-  color:#0f172a;
-  margin:20px 0;
-}
+  .logo{
+    width:38px; height:38px;
+    border-radius:12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
+    box-shadow: 0 10px 22px rgba(11,31,74,.18);
+  }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
+  .brand h1{
+    font-size:16px;
+    margin:0;
+    letter-spacing:.2px;
+  }
 
-label{
-  font-size:12px;
-  color:#6b7280;
-}
+  .lang{
+    font-size:13px;
+    user-select:none;
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .lang span{
+    cursor:pointer;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--muted);
+  }
+  .lang span.active{
+    border-color: rgba(11,31,74,.25);
+    background: var(--chip);
+    color: var(--chipText);
+  }
 
-select,input{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #d1d5db;
-  font-size:16px;
-  margin-top:6px;
-}
+  .card{
+    background:var(--card);
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:18px;
+    padding:18px;
+    box-shadow: 0 14px 40px rgba(15,23,42,.06);
+  }
 
-button{
-  margin-top:14px;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background:#1e3a8a;
-  color:#fff;
-  font-size:14px;
-  cursor:pointer;
-}
+  .meta{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.4;
+    margin-bottom:14px;
+  }
+  .meta.clickable{
+    cursor:pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 
-button:hover{
-  background:#1e40af;
-}
+  .hint{
+    margin:4px 0 14px;
+    font-size:13px;
+    color:#111827;
+  }
 
-.quick{
-  margin-top:12px;
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap:10px;
+    align-items:end;
+  }
 
-.quick button{
-  background:#e5e7eb;
-  color:#111827;
-}
+  label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
 
-.quick button:hover{
-  background:#d1d5db;
-}
+  select, input{
+    width:100%;
+    padding:12px 12px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    font-size:16px;
+    outline:none;
+    background:#fff;
+  }
+  select:focus, input:focus{
+    border-color: rgba(11,31,74,.35);
+    box-shadow: 0 0 0 4px rgba(11,31,74,.08);
+  }
 
-.copy-btn{
-  margin-top:8px;
-  background:#111827;
-}
+  .swapBtn{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:#fff;
+    cursor:pointer;
+    font-size:18px;
+  }
+  .swapBtn:active{ transform: translateY(1px); }
 
-.footer{
-  text-align:center;
-  font-size:12px;
-  color:#9ca3af;
-  margin-top:20px;
-}
+  .amountRow{
+    margin-top:10px;
+  }
+
+  .quick{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .chip{
+    padding:8px 10px;
+    border-radius:999px;
+    border:1px solid rgba(11,31,74,.16);
+    background: var(--chip);
+    color: var(--chipText);
+    font-size:13px;
+    cursor:pointer;
+  }
+  .chip:active{ transform: translateY(1px); }
+
+  .resultBox{
+    margin-top:14px;
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:16px;
+    padding:14px 14px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBFCFF 100%);
+  }
+
+  .resultLabel{
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+
+  .resultRow{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    justify-content:space-between;
+  }
+
+  .result{
+    font-size:30px;
+    font-weight:650;
+    letter-spacing:.2px;
+    line-height:1.1;
+    flex:1;
+    word-break:break-word;
+  }
+
+  .copyBtn{
+    border:none;
+    border-radius:14px;
+    padding:12px 14px;
+    background: var(--primary);
+    color: var(--btnText);
+    font-size:14px;
+    cursor:pointer;
+    min-width:88px;
+  }
+  .copyBtn:hover{ background: var(--primary2); }
+  .copyBtn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+  }
+
+  .sub{
+    margin-top:10px;
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+
+  .footer{
+    margin-top:16px;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+  }
+  .footer a{
+    color:var(--muted);
+    text-decoration:none;
+  }
+  .footer a:hover{ text-decoration:underline; }
 </style>
 </head>
 
 <body>
+<div class="wrap">
 
-<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <h1 id="titleTop">Currency Converter</h1>
+    </div>
+    <div class="lang" id="langSwitch">
+      <span id="btnEN" onclick="setLang('en', true)">EN</span>
+      <span id="btnKM" onclick="setLang('km', true)">ខ្មែរ</span>
+      <span id="btnZH" onclick="setLang('zh', true)">中文</span>
+    </div>
+  </div>
+
   <div class="card">
-
-    <h1 id="title">Currency Converter</h1>
     <div class="meta" id="meta">Loading rates...</div>
+    <div class="hint" id="hint">Convert before you exchange money.</div>
 
     <div class="grid">
       <div>
-        <label>From</label>
-        <select id="from">
-          <option value="USD">USD</option>
-          <option value="KHR">KHR</option>
-          <option value="CNY">RMB</option>
-        </select>
+        <label id="lblFrom">From</label>
+        <select id="from"></select>
       </div>
       <div>
-        <label>To</label>
-        <select id="to">
-          <option value="KHR">KHR</option>
-          <option value="USD">USD</option>
-          <option value="CNY">RMB</option>
-        </select>
+        <label id="lblTo">To</label>
+        <select id="to"></select>
       </div>
+      <button class="swapBtn" id="swap" title="Swap">⇄</button>
     </div>
 
-    <div>
-      <label>Amount</label>
-      <input id="amount" type="number" placeholder="Enter amount">
+    <div class="amountRow">
+      <label id="lblAmount">Amount</label>
+      <input id="amount" type="number" inputmode="decimal" placeholder="Enter amount" />
     </div>
 
     <div class="quick" id="quickButtons"></div>
 
-    <div class="result-big" id="result">
-      50 USD ≈ 200,000 KHR
+    <div class="resultBox">
+      <div class="resultLabel" id="lblResult">Result</div>
+      <div class="resultRow">
+        <div class="result" id="result">—</div>
+        <button id="copy" class="copyBtn" disabled>Copy</button>
+      </div>
+      <div class="sub" id="subText">
+        Source: Public daily reference rates (for reference only). This tool does not provide financial services.
+      </div>
     </div>
-
-    <button class="copy-btn" onclick="copyResult()">Copy Result</button>
 
     <div class="footer">
-      For reference only. Not a financial service.
+      <a href="/privacy.html" id="linkPrivacy">Privacy</a> ·
+      <a href="/terms.html" id="linkTerms">Terms</a> ·
+      <a href="/disclaimer.html" id="linkDisclaimer">Disclaimer</a>
     </div>
-
   </div>
+
 </div>
 
 <script>
-let usd_khr = null;
-let usd_cny = null;
+  // ---------- Quick amounts ----------
+  const QUICK_AMOUNTS = {
+    USD: [50, 75, 120],
+    KHR: [50000, 100000, 200000],
+    CNY: [100, 300, 500]
+  };
 
-const QUICK = {
-  USD:[50,75,120],
-  KHR:[50000,100000,200000],
-  CNY:[100,300,500]
-};
+  // ---------- State ----------
+  let currentLang = "en";
+  let usd_khr = null; // 1 USD = ? KHR
+  let usd_cny = null; // 1 USD = ? CNY
+  let lastRateText = "";
 
-function renderQuick(){
-  const wrap=document.getElementById("quickButtons");
-  wrap.innerHTML="";
-  const from=document.getElementById("from").value;
-  (QUICK[from]||[]).forEach(v=>{
-    const b=document.createElement("button");
-    b.innerText=v+" "+from;
-    b.onclick=()=>{
-      document.getElementById("amount").value=v;
-      calculate(true,"quick");
-    };
-    wrap.appendChild(b);
-  });
-}
+  const currencyCodes = ["USD", "KHR", "CNY"];
 
-function getRate(from,to){
-  if(from===to) return 1;
-  if(!usd_khr||!usd_cny) return null;
+  const i18n = {
+    en: {
+      title: "Currency Converter",
+      hint: "Convert before you exchange money.",
+      from: "From",
+      to: "To",
+      amount: "Amount",
+      result: "Result",
+      enter: "Enter amount",
+      loading: "Loading rates...",
+      tapRetry: "Failed to load rates. Tap to retry.",
+      copy: "Copy",
+      copied: "Copied",
+      sub: "Source: Public daily reference rates (for reference only). This tool does not provide financial services.",
+      ccy: { USD: "USD", KHR: "KHR", CNY: "RMB (CNY)" },
+      linkPrivacy: "Privacy",
+      linkTerms: "Terms",
+      linkDisclaimer: "Disclaimer"
+    },
+    km: {
+      title: "កម្មវិធីបម្លែងប្រាក់",
+      hint: "បម្លែងមុនពេលអ្នកប្តូរប្រាក់។",
+      from: "ពី",
+      to: "ទៅ",
+      amount: "ចំនួន",
+      result: "លទ្ធផល",
+      enter: "បញ្ចូលចំនួន",
+      loading: "កំពុងផ្ទុកអត្រា...",
+      tapRetry: "ផ្ទុកអត្រាមិនបាន។ ចុចដើម្បីសាកល្បងម្តងទៀត។",
+      copy: "ចម្លង",
+      copied: "បានចម្លង",
+      sub: "ប្រភព៖ អត្រាយោងប្រចាំថ្ងៃ (សម្រាប់យោងប៉ុណ្ណោះ)។ ឧបករណ៍នេះមិនមែនជាសេវាហិរញ្ញវត្ថុទេ។",
+      ccy: { USD: "USD", KHR: "KHR", CNY: "RMB (CNY)" },
+      linkPrivacy: "Privacy",
+      linkTerms: "Terms",
+      linkDisclaimer: "Disclaimer"
+    },
+    zh: {
+      title: "汇率换算工具",
+      hint: "换钱前先算一下。",
+      from: "从",
+      to: "到",
+      amount: "金额",
+      result: "换算结果",
+      enter: "请输入金额",
+      loading: "正在加载汇率...",
+      tapRetry: "加载失败，点击重试。",
+      copy: "复制",
+      copied: "已复制",
+      sub: "来源：公开每日参考汇率（仅供参考）。本工具不提供金融服务。",
+      ccy: { USD: "美元 (USD)", KHR: "瑞尔 (KHR)", CNY: "人民币 (CNY)" },
+      linkPrivacy: "隐私政策",
+      linkTerms: "使用条款",
+      linkDisclaimer: "免责声明"
+    }
+  };
 
-  if(from==="USD"&&to==="KHR") return usd_khr;
-  if(from==="USD"&&to==="CNY") return usd_cny;
-  if(from==="KHR"&&to==="USD") return 1/usd_khr;
-  if(from==="CNY"&&to==="USD") return 1/usd_cny;
-  if(from==="KHR"&&to==="CNY") return (1/usd_khr)*usd_cny;
-  if(from==="CNY"&&to==="KHR") return (1/usd_cny)*usd_khr;
-}
-
-function calculate(track=true,source="input"){
-  const from=document.getElementById("from").value;
-  const to=document.getElementById("to").value;
-  const amt=parseFloat(document.getElementById("amount").value);
-
-  if(isNaN(amt)) return;
-
-  const rate=getRate(from,to);
-  if(!rate) return;
-
-  const val=amt*rate;
-  document.getElementById("result").innerText=
-    amt.toLocaleString()+" "+from+" ≈ "+
-    val.toLocaleString(undefined,{maximumFractionDigits:2})+" "+to;
-
-  if(track){
-    gtag('event','calculate',{from_currency:from,to_currency:to,source:source});
+  function detectLangFromBrowser() {
+    const raw = (navigator.language || navigator.userLanguage || "").toLowerCase();
+    if (raw.startsWith("km")) return "km";
+    if (raw.startsWith("zh")) return "zh";
+    return "en"; // fallback for unknown/other
   }
-}
 
-async function loadRates(){
-  const r1=await fetch('/api/rate');
-  const d1=await r1.json();
-  usd_khr=d1.usd_khr;
+  function setLang(lang, userInitiated=false) {
+    currentLang = (lang in i18n) ? lang : "en";
 
-  const r2=await fetch('https://open.er-api.com/v6/latest/USD');
-  const d2=await r2.json();
-  usd_cny=d2.rates.CNY;
+    if (userInitiated) {
+      try { localStorage.setItem("lang_pref", currentLang); } catch {}
+    }
 
-  document.getElementById("meta").innerText=
-    "1 USD = "+usd_khr+" KHR | 1 USD = "+usd_cny.toFixed(4)+" CNY";
+    document.getElementById("btnEN").classList.toggle("active", currentLang === "en");
+    document.getElementById("btnKM").classList.toggle("active", currentLang === "km");
+    document.getElementById("btnZH").classList.toggle("active", currentLang === "zh");
 
-  document.getElementById("amount").value=50;
-  renderQuick();
-  calculate(false);
-}
+    document.getElementById("titleTop").innerText = i18n[currentLang].title;
+    document.getElementById("hint").innerText = i18n[currentLang].hint;
+    document.getElementById("lblFrom").innerText = i18n[currentLang].from;
+    document.getElementById("lblTo").innerText = i18n[currentLang].to;
+    document.getElementById("lblAmount").innerText = i18n[currentLang].amount;
+    document.getElementById("lblResult").innerText = i18n[currentLang].result;
+    document.getElementById("amount").placeholder = i18n[currentLang].enter;
+    document.getElementById("copy").innerText = i18n[currentLang].copy;
+    document.getElementById("subText").innerText = i18n[currentLang].sub;
+    document.getElementById("linkPrivacy").innerText = i18n[currentLang].linkPrivacy;
+    document.getElementById("linkTerms").innerText = i18n[currentLang].linkTerms;
+    document.getElementById("linkDisclaimer").innerText = i18n[currentLang].linkDisclaimer;
 
-function copyResult(){
-  const text=document.getElementById("result").innerText;
-  navigator.clipboard.writeText(text);
-  gtag('event','copy_result');
-}
+    // rebuild currency dropdown labels (keep selection)
+    const fromVal = document.getElementById("from").value || "USD";
+    const toVal = document.getElementById("to").value || "KHR";
+    buildCurrencySelects(fromVal, toVal);
 
-document.getElementById("from").addEventListener("change",()=>{renderQuick();calculate();});
-document.getElementById("to").addEventListener("change",()=>calculate());
-document.getElementById("amount").addEventListener("input",()=>calculate());
+    renderQuickButtons();
+    calculate(false);
+  }
 
-loadRates();
+  function buildCurrencySelects(fromValue, toValue) {
+    const fromSel = document.getElementById("from");
+    const toSel = document.getElementById("to");
+    fromSel.innerHTML = "";
+    toSel.innerHTML = "";
+
+    currencyCodes.forEach(code => {
+      const o1 = document.createElement("option");
+      o1.value = code;
+      o1.textContent = i18n[currentLang].ccy[code] || code;
+      fromSel.appendChild(o1);
+
+      const o2 = document.createElement("option");
+      o2.value = code;
+      o2.textContent = i18n[currentLang].ccy[code] || code;
+      toSel.appendChild(o2);
+    });
+
+    fromSel.value = fromValue;
+    toSel.value = toValue;
+
+    // avoid same
+    if (fromSel.value === toSel.value) {
+      toSel.value = (fromSel.value === "USD") ? "KHR" : "USD";
+    }
+  }
+
+  function currencyShort(code) {
+    // Result text currency name
+    if (currentLang === "zh") {
+      if (code === "USD") return "美元";
+      if (code === "KHR") return "瑞尔";
+      if (code === "CNY") return "人民币";
+    }
+    if (code === "CNY") return "RMB";
+    return code;
+  }
+
+  function setCopyEnabled(enabled) {
+    document.getElementById("copy").disabled = !enabled;
+  }
+
+  function renderQuickButtons() {
+    const wrap = document.getElementById("quickButtons");
+    wrap.innerHTML = "";
+
+    const from = document.getElementById("from").value;
+    const arr = QUICK_AMOUNTS[from] || [];
+    if (!arr.length) return;
+
+    arr.forEach(v => {
+      const b = document.createElement("button");
+      b.className = "chip";
+      b.type = "button";
+      b.textContent = `${v.toLocaleString()} ${currencyShort(from)}`;
+      b.onclick = () => {
+        document.getElementById("amount").value = v;
+        calculate(true, "quick");
+      };
+      wrap.appendChild(b);
+    });
+  }
+
+  function setDefaultAmountByFrom() {
+    const from = document.getElementById("from").value;
+    const defaults = QUICK_AMOUNTS[from] || [];
+    if (defaults.length) document.getElementById("amount").value = defaults[0];
+  }
+
+  // Rate for from->to (bridge via USD using usd_khr & usd_cny)
+  function getRate(from, to) {
+    if (from === to) return 1;
+    if (usd_khr == null || usd_cny == null) return null;
+
+    if (from === "USD" && to === "KHR") return usd_khr;
+    if (from === "USD" && to === "CNY") return usd_cny;
+
+    if (from === "KHR" && to === "USD") return 1 / usd_khr;
+    if (from === "CNY" && to === "USD") return 1 / usd_cny;
+
+    if (from === "KHR" && to === "CNY") return (1 / usd_khr) * usd_cny;
+    if (from === "CNY" && to === "KHR") return (1 / usd_cny) * usd_khr;
+
+    return null;
+  }
+
+  function formatNumber(n, decimals) {
+    if (typeof n !== "number" || !isFinite(n)) return "";
+    return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+  }
+
+  function getResultText(amount, from, to) {
+    const rate = getRate(from, to);
+    if (rate == null || isNaN(amount)) return "";
+
+    const converted = amount * rate;
+    const leftDec = (from === "KHR") ? 0 : 2;
+    const rightDec = (to === "KHR") ? 0 : 2;
+
+    const left = `${formatNumber(amount, leftDec)} ${currencyShort(from)}`;
+    const right = `${formatNumber(converted, rightDec)} ${currencyShort(to)}`;
+    return `${left} ≈ ${right}`;
+  }
+
+  function calculate(track=true, source="input") {
+    const metaEl = document.getElementById("meta");
+    const resultEl = document.getElementById("result");
+
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+
+    if (usd_khr == null || usd_cny == null) {
+      resultEl.innerText = i18n[currentLang].loading;
+      metaEl.innerText = i18n[currentLang].loading;
+      setCopyEnabled(false);
+      return;
+    }
+
+    if (isNaN(amount)) {
+      resultEl.innerText = "—";
+      setCopyEnabled(false);
+      return;
+    }
+
+    const text = getResultText(amount, from, to);
+    lastRateText = text;
+    resultEl.innerText = text || "—";
+    setCopyEnabled(!!text);
+
+    if (track && typeof gtag === "function") {
+      gtag('event', 'calculate', {
+        from_currency: from,
+        to_currency: to,
+        source: source
+      });
+    }
+  }
+
+  async function copyResult() {
+    if (!lastRateText) return;
+
+    try {
+      await navigator.clipboard.writeText(lastRateText);
+      const btn = document.getElementById("copy");
+      const old = btn.innerText;
+      btn.innerText = i18n[currentLang].copied;
+
+      if (typeof gtag === "function") {
+        gtag('event', 'copy_result', {
+          from_currency: document.getElementById("from").value,
+          to_currency: document.getElementById("to").value
+        });
+      }
+
+      setTimeout(() => btn.innerText = old, 1200);
+    } catch (e) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = lastRateText;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      } catch {}
+      console.error(e);
+    }
+  }
+
+  async function loadRates() {
+    const metaEl = document.getElementById("meta");
+    metaEl.classList.remove("clickable");
+    metaEl.onclick = null;
+    metaEl.innerText = i18n[currentLang].loading;
+
+    try {
+      // 1) USD->KHR from your existing API
+      const c1 = new AbortController();
+      const t1 = setTimeout(() => c1.abort(), 10000);
+      const r1 = await fetch('/api/rate?ts=' + Date.now(), { cache: "no-store", signal: c1.signal });
+      clearTimeout(t1);
+      if (!r1.ok) throw new Error("KHR_HTTP_" + r1.status);
+      const d1 = await r1.json();
+      usd_khr = d1.usd_khr;
+
+      // 2) USD->CNY from open.er-api.com (no key)
+      const c2 = new AbortController();
+      const t2 = setTimeout(() => c2.abort(), 10000);
+      const r2 = await fetch('https://open.er-api.com/v6/latest/USD', { cache: "no-store", signal: c2.signal });
+      clearTimeout(t2);
+      if (!r2.ok) throw new Error("CNY_HTTP_" + r2.status);
+      const d2 = await r2.json();
+      usd_cny = d2 && d2.rates ? d2.rates.CNY : null;
+      if (usd_cny == null) throw new Error("CNY_MISSING");
+
+      metaEl.innerText =
+        `Rates loaded: 1 USD = ${Math.round(usd_khr)} KHR | 1 USD = ${usd_cny.toFixed(4)} CNY`;
+
+      renderQuickButtons();
+      if (!document.getElementById("amount").value) setDefaultAmountByFrom();
+      calculate(false);
+
+    } catch (e) {
+      metaEl.innerText = i18n[currentLang].tapRetry;
+      metaEl.classList.add("clickable");
+      metaEl.onclick = () => loadRates();
+      console.error(e);
+    }
+  }
+
+  function swapFromTo() {
+    const fromEl = document.getElementById("from");
+    const toEl = document.getElementById("to");
+    const tmp = fromEl.value;
+    fromEl.value = toEl.value;
+    toEl.value = tmp;
+
+    if (fromEl.value === toEl.value) {
+      toEl.value = (fromEl.value === "USD") ? "KHR" : "USD";
+    }
+
+    renderQuickButtons();
+    setDefaultAmountByFrom();
+    calculate(true, "swap_pair");
+  }
+
+  // ---------- Wire events ----------
+  document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
+  document.getElementById("from").addEventListener("change", () => {
+    if (document.getElementById("from").value === document.getElementById("to").value) {
+      document.getElementById("to").value = (document.getElementById("from").value === "USD") ? "KHR" : "USD";
+    }
+    renderQuickButtons();
+    setDefaultAmountByFrom();
+    calculate(true, "change_from");
+  });
+  document.getElementById("to").addEventListener("change", () => {
+    if (document.getElementById("from").value === document.getElementById("to").value) {
+      document.getElementById("from").value = (document.getElementById("to").value === "USD") ? "KHR" : "USD";
+    }
+    renderQuickButtons();
+    calculate(true, "change_to");
+  });
+  document.getElementById("swap").addEventListener("click", swapFromTo);
+  document.getElementById("copy").addEventListener("click", copyResult);
+
+  // PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+  }
+
+  // ---------- INIT ----------
+  // Default currency pair: USD -> KHR
+  buildCurrencySelects("USD", "KHR");
+  setDefaultAmountByFrom();
+  renderQuickButtons();
+
+  // Language: prefer saved; else browser; else en
+  let initialLang = "en";
+  try {
+    const saved = localStorage.getItem("lang_pref");
+    if (saved && (saved in i18n)) initialLang = saved;
+    else initialLang = detectLangFromBrowser();
+  } catch {
+    initialLang = detectLangFromBrowser();
+  }
+  setLang(initialLang, false);
+
+  window.addEventListener("DOMContentLoaded", () => {
+    loadRates();
+  });
 </script>
-
 </body>
 </html>
