@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>USD ⇄ KHR Converter</title>
+<title>Currency Converter (USD / KHR / RMB)</title>
 
 <!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
@@ -21,22 +21,27 @@
 
 <style>
   body { font-family: system-ui, Arial; margin:20px; }
-  .card { max-width:560px; margin:auto; padding:20px; border:1px solid #eee; border-radius:12px; }
+  .card { max-width:640px; margin:auto; padding:20px; border:1px solid #eee; border-radius:12px; }
   h1 { font-size:20px; margin:0 0 6px; }
   .meta { color:#666; font-size:13px; margin-bottom:12px; }
-  .hint { font-size:13px; margin:10px 0 6px; color:#111; }
-  .row { display:flex; gap:10px; margin:10px 0; align-items:center; }
-  input { flex:1; padding:10px; font-size:16px; }
-  button { padding:10px 12px; cursor:pointer; }
-  .mini { padding:8px 10px; font-size:14px; border:1px solid #ddd; background:#fafafa; border-radius:10px; }
-  .mini:active { transform: translateY(1px); }
+  .hint { font-size:13px; margin:10px 0 10px; color:#111; }
   .lang-switch { text-align:right; margin-bottom:10px; font-size:14px; }
   .lang-switch span { cursor:pointer; }
-  .quick { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+
+  .grid { display:grid; grid-template-columns: 1fr 1fr auto; gap:10px; align-items:end; }
+  label { font-size:12px; color:#555; display:block; margin-bottom:6px; }
+  select, input { width:100%; padding:10px; font-size:16px; }
+  button { padding:10px 12px; cursor:pointer; }
+
+  .mini { padding:8px 10px; font-size:14px; border:1px solid #ddd; background:#fafafa; border-radius:10px; }
+  .mini:active { transform: translateY(1px); }
+
+  .quick { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
   .resultRow { display:flex; gap:10px; align-items:center; margin-top:14px; }
   .result { flex:1; font-size:18px; }
   .copyBtn { border:1px solid #ddd; background:#fff; border-radius:10px; padding:10px 12px; }
   .copyBtn:disabled { opacity:0.6; cursor:not-allowed; }
+
   .sub { font-size:11px; color:#777; margin-top:8px; line-height:1.4; }
   .footer { text-align:center; margin-top:26px; font-size:12px; }
 </style>
@@ -50,14 +55,38 @@
     <span onclick="setLang('km')">ខ្មែរ</span>
   </div>
 
-  <h1 id="title">USD ⇄ KHR Converter</h1>
-  <div class="meta" id="meta">Loading official rate...</div>
+  <h1 id="title">Currency Converter</h1>
+  <div class="meta" id="meta">Loading rates...</div>
 
   <div class="hint" id="hint">Convert before you exchange money.</div>
 
-  <div class="row">
+  <div class="grid">
+    <div>
+      <label id="lblFrom">From</label>
+      <select id="from">
+        <option value="USD">USD</option>
+        <option value="KHR">KHR</option>
+        <option value="CNY">RMB (CNY)</option>
+      </select>
+    </div>
+
+    <div>
+      <label id="lblTo">To</label>
+      <select id="to">
+        <option value="KHR">KHR</option>
+        <option value="USD">USD</option>
+        <option value="CNY">RMB (CNY)</option>
+      </select>
+    </div>
+
+    <div>
+      <button id="swap" class="mini" style="width:100%;">⇄</button>
+    </div>
+  </div>
+
+  <div style="margin-top:10px;">
+    <label id="lblAmount">Amount</label>
     <input id="amount" type="number" inputmode="decimal" placeholder="Enter amount" />
-    <button id="swap" class="mini">USD → KHR</button>
   </div>
 
   <div class="quick" id="quickButtons"></div>
@@ -68,7 +97,7 @@
   </div>
 
   <div class="sub">
-    Source: Public daily reference rate. This tool does not provide financial services.
+    Source: Public daily reference rates (for reference only). This tool does not provide financial services.
   </div>
 
   <div class="footer">
@@ -80,35 +109,40 @@
 </div>
 
 <script>
-  let usdKhr = null;
-  let mode = "USD2KHR"; // USD2KHR or KHR2USD
-  let currentLang = "en";
-
-  const DEFAULT_USD = 50;
+  // --------- Config ----------
+  const DEFAULT_AMOUNT_USD = 50;
   const QUICK_USD = [50, 75, 120];
+
+  // --------- State ----------
+  let currentLang = "en";
+  let usd_khr = null; // number
+  let usd_cny = null; // number
+  let lastRateText = ""; // for copy
 
   const translations = {
     en: {
-      title: "USD ⇄ KHR Converter",
+      title: "Currency Converter",
       hint: "Convert before you exchange money.",
+      from: "From",
+      to: "To",
+      amount: "Amount",
       enter: "Enter amount",
-      loading: "Loading official rate...",
-      swap1: "USD → KHR",
-      swap2: "KHR → USD",
+      loading: "Loading rates...",
+      tapRetry: "Failed to load rates. Tap to retry.",
       copy: "Copy",
-      copied: "Copied",
-      tapRetry: "Failed to load rate. Tap to retry."
+      copied: "Copied"
     },
     km: {
-      title: "កម្មវិធីបម្លែង USD ⇄ KHR",
+      title: "កម្មវិធីបម្លែងប្រាក់",
       hint: "បម្លែងមុនពេលអ្នកប្តូរប្រាក់។",
+      from: "ពី",
+      to: "ទៅ",
+      amount: "ចំនួន",
       enter: "បញ្ចូលចំនួន",
-      loading: "កំពុងផ្ទុកអត្រាផ្លូវការ...",
-      swap1: "USD → KHR",
-      swap2: "KHR → USD",
+      loading: "កំពុងផ្ទុកអត្រា...",
+      tapRetry: "ផ្ទុកអត្រាមិនបាន។ ចុចដើម្បីសាកល្បងម្តងទៀត។",
       copy: "ចម្លង",
-      copied: "បានចម្លង",
-      tapRetry: "ផ្ទុកអត្រាមិនបាន។ ចុចដើម្បីសាកល្បងម្តងទៀត។"
+      copied: "បានចម្លង"
     }
   };
 
@@ -116,24 +150,25 @@
     currentLang = lang;
     document.getElementById("title").innerText = translations[lang].title;
     document.getElementById("hint").innerText = translations[lang].hint;
+    document.getElementById("lblFrom").innerText = translations[lang].from;
+    document.getElementById("lblTo").innerText = translations[lang].to;
+    document.getElementById("lblAmount").innerText = translations[lang].amount;
     document.getElementById("amount").placeholder = translations[lang].enter;
     document.getElementById("copy").innerText = translations[lang].copy;
-    updateSwapText();
-    renderQuickButtons();
     calculate(false);
   }
 
-  function updateSwapText(){
-    document.getElementById("swap").innerText =
-      (mode === "USD2KHR") ? translations[currentLang].swap1 : translations[currentLang].swap2;
+  function setCopyEnabled(enabled){
+    const btn = document.getElementById("copy");
+    btn.disabled = !enabled;
   }
 
   function renderQuickButtons(){
     const wrap = document.getElementById("quickButtons");
     wrap.innerHTML = "";
 
-    // 仅在 USD→KHR 时显示 USD 快捷按钮（更符合换汇场景）
-    if (mode !== "USD2KHR") return;
+    const from = document.getElementById("from").value;
+    if (from !== "USD") return; // 仅 From=USD 时显示快捷 USD
 
     QUICK_USD.forEach(v => {
       const b = document.createElement("button");
@@ -148,112 +183,103 @@
     });
   }
 
-  async function loadRate() {
+  // 计算 from->to 的汇率（基于 usd_khr 和 usd_cny 桥接）
+  function getRate(from, to){
+    if (from === to) return 1;
+
+    // 必须先有 USD 基础到 KHR/CNY
+    if (usd_khr == null || usd_cny == null) return null;
+
+    // USD -> X
+    if (from === "USD" && to === "KHR") return usd_khr;
+    if (from === "USD" && to === "CNY") return usd_cny;
+
+    // X -> USD
+    if (from === "KHR" && to === "USD") return 1 / usd_khr;
+    if (from === "CNY" && to === "USD") return 1 / usd_cny;
+
+    // KHR <-> CNY via USD
+    if (from === "KHR" && to === "CNY") return (1 / usd_khr) * usd_cny;
+    if (from === "CNY" && to === "KHR") return (1 / usd_cny) * usd_khr;
+
+    return null;
+  }
+
+  function formatNumber(n, decimals){
+    if (typeof n !== "number" || !isFinite(n)) return "";
+    return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+  }
+
+  function getResultText(amount, from, to){
+    const rate = getRate(from, to);
+    if (rate == null || isNaN(amount)) return "";
+
+    const converted = amount * rate;
+
+    // KHR 通常不用小数；USD/CNY 保留两位
+    const dec = (to === "KHR") ? 0 : 2;
+
+    const left = `${formatNumber(amount, (from === "KHR") ? 0 : 2)} ${from}`;
+    const right = `${formatNumber(converted, dec)} ${to}`;
+    return `${left} ≈ ${right}`;
+  }
+
+  function calculate(track = true, source = "input"){
     const metaEl = document.getElementById("meta");
-    try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 10000);
-
-      const r = await fetch('/api/rate?ts=' + Date.now(), {
-        cache: "no-store",
-        signal: controller.signal
-      });
-
-      clearTimeout(timer);
-      if (!r.ok) throw new Error("HTTP_" + r.status);
-
-      const data = await r.json();
-      usdKhr = data.usd_khr;
-
-      metaEl.style.cursor = "default";
-      metaEl.onclick = null;
-      metaEl.innerText =
-        "Official daily reference rate (" + data.date + "): 1 USD = " + usdKhr + " KHR (for reference only)";
-
-      // 默认填充并自动计算（提升转化）
-      if (!document.getElementById("amount").value) {
-        document.getElementById("amount").value = DEFAULT_USD;
-      }
-      calculate(false);
-
-    } catch (e) {
-      metaEl.innerText = translations[currentLang].tapRetry;
-      metaEl.style.cursor = "pointer";
-      metaEl.onclick = () => {
-        metaEl.innerText = translations[currentLang].loading;
-        loadRate();
-      };
-      console.error(e);
-    }
-  }
-
-  function getResultText(amount){
-    if (!usdKhr || isNaN(amount)) return "";
-
-    if (mode === "USD2KHR") {
-      const khr = amount * usdKhr;
-      return amount + " USD ≈ " + Math.round(khr) + " KHR";
-    } else {
-      const usd = amount / usdKhr;
-      return amount + " KHR ≈ " + usd.toFixed(2) + " USD";
-    }
-  }
-
-  function setCopyEnabled(enabled){
-    const btn = document.getElementById("copy");
-    btn.disabled = !enabled;
-  }
-
-  function calculate(track = true, source = "input") {
-    const amount = parseFloat(document.getElementById("amount").value);
     const resultEl = document.getElementById("result");
 
-    if (!usdKhr) {
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+
+    if (usd_khr == null || usd_cny == null){
       resultEl.innerText = translations[currentLang].loading;
+      metaEl.innerText = translations[currentLang].loading;
       setCopyEnabled(false);
       return;
     }
 
-    if (isNaN(amount)) {
+    if (isNaN(amount)){
       resultEl.innerText = translations[currentLang].enter;
       setCopyEnabled(false);
       return;
     }
 
-    const text = getResultText(amount);
-    resultEl.innerText = text;
+    const text = getResultText(amount, from, to);
+    lastRateText = text;
+    resultEl.innerText = text || translations[currentLang].enter;
     setCopyEnabled(!!text);
 
-    // GA 事件统计（只在用户操作触发时统计；初始化不统计）
     if (track && typeof gtag === "function") {
       gtag('event', 'calculate', {
-        currency_mode: mode,
+        from_currency: from,
+        to_currency: to,
         source: source
       });
     }
   }
 
   async function copyResult(){
-    const text = document.getElementById("result").innerText || "";
-    if (!text) return;
+    if (!lastRateText) return;
 
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(lastRateText);
       const btn = document.getElementById("copy");
       const old = btn.innerText;
       btn.innerText = translations[currentLang].copied;
 
-      // GA：复制事件（用于衡量“分享意图”）
       if (typeof gtag === "function") {
-        gtag('event', 'copy_result', { currency_mode: mode });
+        gtag('event', 'copy_result', {
+          from_currency: document.getElementById("from").value,
+          to_currency: document.getElementById("to").value
+        });
       }
 
       setTimeout(() => btn.innerText = old, 1200);
     } catch (e) {
-      // 兼容性兜底（老浏览器）
       try {
         const ta = document.createElement("textarea");
-        ta.value = text;
+        ta.value = lastRateText;
         document.body.appendChild(ta);
         ta.select();
         document.execCommand("copy");
@@ -263,15 +289,85 @@
     }
   }
 
-  document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
+  async function loadRates(){
+    const metaEl = document.getElementById("meta");
+    metaEl.style.cursor = "default";
+    metaEl.onclick = null;
+    metaEl.innerText = translations[currentLang].loading;
 
-  document.getElementById("swap").addEventListener("click", function() {
-    mode = (mode === "USD2KHR") ? "KHR2USD" : "USD2KHR";
-    updateSwapText();
+    try {
+      // 1) USD->KHR from your existing API
+      const controller1 = new AbortController();
+      const t1 = setTimeout(() => controller1.abort(), 10000);
+      const r1 = await fetch('/api/rate?ts=' + Date.now(), { cache: "no-store", signal: controller1.signal });
+      clearTimeout(t1);
+      if (!r1.ok) throw new Error("KHR_HTTP_" + r1.status);
+      const d1 = await r1.json();
+      usd_khr = d1.usd_khr;
+
+      // 2) USD->CNY from open.er-api.com (no key)
+      const controller2 = new AbortController();
+      const t2 = setTimeout(() => controller2.abort(), 10000);
+      const r2 = await fetch('https://open.er-api.com/v6/latest/USD', { cache: "no-store", signal: controller2.signal });
+      clearTimeout(t2);
+      if (!r2.ok) throw new Error("CNY_HTTP_" + r2.status);
+      const d2 = await r2.json();
+      usd_cny = d2 && d2.rates ? d2.rates.CNY : null;
+      if (usd_cny == null) throw new Error("CNY_MISSING");
+
+      // Meta display
+      metaEl.innerText =
+        `Rates loaded: 1 USD = ${Math.round(usd_khr)} KHR | 1 USD = ${formatNumber(usd_cny, 4)} CNY (for reference only)`;
+
+      // default amount + quick buttons
+      renderQuickButtons();
+      if (!document.getElementById("amount").value) {
+        document.getElementById("amount").value = DEFAULT_AMOUNT_USD;
+      }
+      calculate(false);
+
+    } catch (e) {
+      metaEl.innerText = translations[currentLang].tapRetry;
+      metaEl.style.cursor = "pointer";
+      metaEl.onclick = () => loadRates();
+      console.error(e);
+    }
+  }
+
+  function swapFromTo(){
+    const fromEl = document.getElementById("from");
+    const toEl = document.getElementById("to");
+    const tmp = fromEl.value;
+    fromEl.value = toEl.value;
+    toEl.value = tmp;
+
+    // 避免出现 From=To
+    if (fromEl.value === toEl.value){
+      toEl.value = (fromEl.value === "USD") ? "KHR" : "USD";
+    }
+
     renderQuickButtons();
-    calculate(true, "swap");
-  });
+    calculate(true, "swap_pair");
+  }
 
+  // Events
+  document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
+  document.getElementById("from").addEventListener("change", () => {
+    // 如果变成 From=To，自动修正
+    if (document.getElementById("from").value === document.getElementById("to").value){
+      document.getElementById("to").value = (document.getElementById("from").value === "USD") ? "KHR" : "USD";
+    }
+    renderQuickButtons();
+    calculate(true, "change_from");
+  });
+  document.getElementById("to").addEventListener("change", () => {
+    if (document.getElementById("from").value === document.getElementById("to").value){
+      document.getElementById("from").value = (document.getElementById("to").value === "USD") ? "KHR" : "USD";
+    }
+    renderQuickButtons();
+    calculate(true, "change_to");
+  });
+  document.getElementById("swap").addEventListener("click", swapFromTo);
   document.getElementById("copy").addEventListener("click", copyResult);
 
   // PWA
@@ -279,17 +375,18 @@
     navigator.serviceWorker.register('/service-worker.js');
   }
 
-  // 自动语言检测（不限制广告语言更重要，站内自动适配）
+  // Auto language detect
   const browserLang = navigator.language || navigator.userLanguage;
-  if (browserLang && browserLang.toLowerCase().startsWith("km")) {
-    setLang("km");
-  } else {
-    setLang("en");
-  }
+  if (browserLang && browserLang.toLowerCase().startsWith("km")) setLang("km");
+  else setLang("en");
 
-  // 页面加载后拉汇率
+  // Default pair: USD -> KHR
+  document.getElementById("from").value = "USD";
+  document.getElementById("to").value = "KHR";
+
+  // Init
   window.addEventListener("DOMContentLoaded", () => {
-    loadRate();
+    loadRates();
   });
 </script>
 
