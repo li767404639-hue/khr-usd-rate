@@ -21,12 +21,13 @@
 
 <style>
   body { font-family: system-ui, Arial; margin:20px; }
-  .card { max-width:640px; margin:auto; padding:20px; border:1px solid #eee; border-radius:12px; }
+  .card { max-width:680px; margin:auto; padding:20px; border:1px solid #eee; border-radius:12px; }
   h1 { font-size:20px; margin:0 0 6px; }
   .meta { color:#666; font-size:13px; margin-bottom:12px; }
   .hint { font-size:13px; margin:10px 0 10px; color:#111; }
-  .lang-switch { text-align:right; margin-bottom:10px; font-size:14px; }
-  .lang-switch span { cursor:pointer; }
+  .lang-switch { text-align:right; margin-bottom:10px; font-size:14px; user-select:none; }
+  .lang-switch span { cursor:pointer; padding:2px 8px; border-radius:10px; }
+  .lang-switch span.active { background:#f2f2f2; }
 
   .grid { display:grid; grid-template-columns: 1fr 1fr auto; gap:10px; align-items:end; }
   label { font-size:12px; color:#555; display:block; margin-bottom:6px; }
@@ -50,9 +51,10 @@
 <body>
 <div class="card">
 
-  <div class="lang-switch">
-    <span onclick="setLang('en')">EN</span> |
-    <span onclick="setLang('km')">ខ្មែរ</span>
+  <div class="lang-switch" id="langSwitch">
+    <span id="btnEN" onclick="setLang('en', true)">EN</span> |
+    <span id="btnKM" onclick="setLang('km', true)">ខ្មែរ</span> |
+    <span id="btnZH" onclick="setLang('zh', true)">中文</span>
   </div>
 
   <h1 id="title">Currency Converter</h1>
@@ -63,20 +65,12 @@
   <div class="grid">
     <div>
       <label id="lblFrom">From</label>
-      <select id="from">
-        <option value="USD">USD</option>
-        <option value="KHR">KHR</option>
-        <option value="CNY">RMB (CNY)</option>
-      </select>
+      <select id="from"></select>
     </div>
 
     <div>
       <label id="lblTo">To</label>
-      <select id="to">
-        <option value="KHR">KHR</option>
-        <option value="USD">USD</option>
-        <option value="CNY">RMB (CNY)</option>
-      </select>
+      <select id="to"></select>
     </div>
 
     <div>
@@ -96,19 +90,23 @@
     <button id="copy" class="copyBtn" disabled>Copy</button>
   </div>
 
-  <div class="sub">
+  <div class="sub" id="subText">
     Source: Public daily reference rates (for reference only). This tool does not provide financial services.
   </div>
 
   <div class="footer">
-    <a href="/privacy.html">Privacy</a> |
-    <a href="/terms.html">Terms</a> |
-    <a href="/disclaimer.html">Disclaimer</a>
+    <a href="/privacy.html" id="linkPrivacy">Privacy</a> |
+    <a href="/terms.html" id="linkTerms">Terms</a> |
+    <a href="/disclaimer.html" id="linkDisclaimer">Disclaimer</a>
   </div>
 
 </div>
 
 <script>
+  // --- Rates we rely on ---
+  // 1 USD -> KHR (from your /api/rate)
+  // 1 USD -> CNY (from open.er-api.com, no key)
+
   // --------- Quick amounts (auto-switch by From currency) ----------
   const QUICK_AMOUNTS = {
     USD: [50, 75, 120],
@@ -120,9 +118,11 @@
   let currentLang = "en";
   let usd_khr = null; // 1 USD = ? KHR
   let usd_cny = null; // 1 USD = ? CNY
-  let lastRateText = ""; // for copy
+  let lastRateText = "";
 
-  const translations = {
+  const currencyCodes = ["USD", "KHR", "CNY"];
+
+  const i18n = {
     en: {
       title: "Currency Converter",
       hint: "Convert before you exchange money.",
@@ -133,7 +133,12 @@
       loading: "Loading rates...",
       tapRetry: "Failed to load rates. Tap to retry.",
       copy: "Copy",
-      copied: "Copied"
+      copied: "Copied",
+      sub: "Source: Public daily reference rates (for reference only). This tool does not provide financial services.",
+      ccy: { USD: "USD", KHR: "KHR", CNY: "RMB (CNY)" },
+      linkPrivacy: "Privacy",
+      linkTerms: "Terms",
+      linkDisclaimer: "Disclaimer"
     },
     km: {
       title: "កម្មវិធីបម្លែងប្រាក់",
@@ -145,32 +150,125 @@
       loading: "កំពុងផ្ទុកអត្រា...",
       tapRetry: "ផ្ទុកអត្រាមិនបាន។ ចុចដើម្បីសាកល្បងម្តងទៀត។",
       copy: "ចម្លង",
-      copied: "បានចម្លង"
+      copied: "បានចម្លង",
+      sub: "ប្រភព៖ អត្រាយោងប្រចាំថ្ងៃ (សម្រាប់យោងប៉ុណ្ណោះ)។ ឧបករណ៍នេះមិនមែនជាសេវាហិរញ្ញវត្ថុទេ។",
+      ccy: { USD: "USD", KHR: "KHR", CNY: "RMB (CNY)" },
+      linkPrivacy: "Privacy",
+      linkTerms: "Terms",
+      linkDisclaimer: "Disclaimer"
+    },
+    zh: {
+      title: "汇率换算工具",
+      hint: "换钱前先算一下。",
+      from: "从",
+      to: "到",
+      amount: "金额",
+      enter: "请输入金额",
+      loading: "正在加载汇率...",
+      tapRetry: "加载失败，点击重试。",
+      copy: "复制",
+      copied: "已复制",
+      sub: "来源：公开每日参考汇率（仅供参考）。本工具不提供金融服务。",
+      ccy: { USD: "美元 (USD)", KHR: "瑞尔 (KHR)", CNY: "人民币 (CNY)" },
+      linkPrivacy: "隐私政策",
+      linkTerms: "使用条款",
+      linkDisclaimer: "免责声明"
     }
   };
 
-  function setLang(lang){
-    currentLang = lang;
-    document.getElementById("title").innerText = translations[lang].title;
-    document.getElementById("hint").innerText = translations[lang].hint;
-    document.getElementById("lblFrom").innerText = translations[lang].from;
-    document.getElementById("lblTo").innerText = translations[lang].to;
-    document.getElementById("lblAmount").innerText = translations[lang].amount;
-    document.getElementById("amount").placeholder = translations[lang].enter;
-    document.getElementById("copy").innerText = translations[lang].copy;
+  function detectLangFromBrowser() {
+    const raw = (navigator.language || navigator.userLanguage || "").toLowerCase();
+    // Khmer
+    if (raw.startsWith("km")) return "km";
+    // Chinese (zh, zh-cn, zh-hans, zh-hant, etc.)
+    if (raw.startsWith("zh")) return "zh";
+    // Fallback
+    return "en";
+  }
+
+  function setLang(lang, userInitiated=false) {
+    currentLang = (lang in i18n) ? lang : "en";
+
+    // Remember only if user clicked
+    if (userInitiated) {
+      try { localStorage.setItem("lang_pref", currentLang); } catch {}
+    }
+
+    // UI active indicator
+    document.getElementById("btnEN").classList.toggle("active", currentLang === "en");
+    document.getElementById("btnKM").classList.toggle("active", currentLang === "km");
+    document.getElementById("btnZH").classList.toggle("active", currentLang === "zh");
+
+    // Texts
+    document.getElementById("title").innerText = i18n[currentLang].title;
+    document.getElementById("hint").innerText = i18n[currentLang].hint;
+    document.getElementById("lblFrom").innerText = i18n[currentLang].from;
+    document.getElementById("lblTo").innerText = i18n[currentLang].to;
+    document.getElementById("lblAmount").innerText = i18n[currentLang].amount;
+    document.getElementById("amount").placeholder = i18n[currentLang].enter;
+    document.getElementById("copy").innerText = i18n[currentLang].copy;
+    document.getElementById("subText").innerText = i18n[currentLang].sub;
+    document.getElementById("linkPrivacy").innerText = i18n[currentLang].linkPrivacy;
+    document.getElementById("linkTerms").innerText = i18n[currentLang].linkTerms;
+    document.getElementById("linkDisclaimer").innerText = i18n[currentLang].linkDisclaimer;
+
+    // Rebuild currency dropdown labels but keep selected values
+    const fromVal = document.getElementById("from").value || "USD";
+    const toVal = document.getElementById("to").value || "KHR";
+    buildCurrencySelects(fromVal, toVal);
+
+    // Re-render quick buttons (label changes)
+    renderQuickButtons();
+
+    // Recalculate (no tracking)
     calculate(false);
   }
 
-  function setCopyEnabled(enabled){
-    const btn = document.getElementById("copy");
-    btn.disabled = !enabled;
+  function buildCurrencySelects(fromValue, toValue) {
+    const fromSel = document.getElementById("from");
+    const toSel = document.getElementById("to");
+
+    fromSel.innerHTML = "";
+    toSel.innerHTML = "";
+
+    currencyCodes.forEach(code => {
+      const o1 = document.createElement("option");
+      o1.value = code;
+      o1.textContent = i18n[currentLang].ccy[code] || code;
+      fromSel.appendChild(o1);
+
+      const o2 = document.createElement("option");
+      o2.value = code;
+      o2.textContent = i18n[currentLang].ccy[code] || code;
+      toSel.appendChild(o2);
+    });
+
+    fromSel.value = fromValue;
+    toSel.value = toValue;
+
+    // avoid same
+    if (fromSel.value === toSel.value) {
+      toSel.value = (fromSel.value === "USD") ? "KHR" : "USD";
+    }
   }
 
-  function currencyLabel(code){
-    return code === "CNY" ? "RMB" : code;
+  function currencyShort(code) {
+    // For result line, we want:
+    // zh: 美元/瑞尔/人民币 ; others: USD/KHR/RMB
+    if (currentLang === "zh") {
+      if (code === "USD") return "美元";
+      if (code === "KHR") return "瑞尔";
+      if (code === "CNY") return "人民币";
+    }
+    if (code === "CNY") return "RMB";
+    return code;
   }
 
-  function renderQuickButtons(){
+  function setCopyEnabled(enabled) {
+    document.getElementById("copy").disabled = !enabled;
+  }
+
+  function renderQuickButtons() {
     const wrap = document.getElementById("quickButtons");
     wrap.innerHTML = "";
 
@@ -182,7 +280,7 @@
       const b = document.createElement("button");
       b.className = "mini";
       b.type = "button";
-      b.textContent = `${v.toLocaleString()} ${currencyLabel(from)}`;
+      b.textContent = `${v.toLocaleString()} ${currencyShort(from)}`;
       b.onclick = () => {
         document.getElementById("amount").value = v;
         calculate(true, "quick");
@@ -191,16 +289,14 @@
     });
   }
 
-  function setDefaultAmountByFrom(){
+  function setDefaultAmountByFrom() {
     const from = document.getElementById("from").value;
     const defaults = QUICK_AMOUNTS[from] || [];
-    if (defaults.length) {
-      document.getElementById("amount").value = defaults[0];
-    }
+    if (defaults.length) document.getElementById("amount").value = defaults[0];
   }
 
   // Rate for from->to (bridge via USD using usd_khr & usd_cny)
-  function getRate(from, to){
+  function getRate(from, to) {
     if (from === to) return 1;
     if (usd_khr == null || usd_cny == null) return null;
 
@@ -219,26 +315,28 @@
     return null;
   }
 
-  function formatNumber(n, decimals){
+  function formatNumber(n, decimals) {
     if (typeof n !== "number" || !isFinite(n)) return "";
     return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
   }
 
-  function getResultText(amount, from, to){
+  function getResultText(amount, from, to) {
     const rate = getRate(from, to);
     if (rate == null || isNaN(amount)) return "";
 
     const converted = amount * rate;
 
+    // decimals: KHR usually integer; USD/CNY two decimals
     const leftDec = (from === "KHR") ? 0 : 2;
     const rightDec = (to === "KHR") ? 0 : 2;
 
-    const left = `${formatNumber(amount, leftDec)} ${currencyLabel(from)}`;
-    const right = `${formatNumber(converted, rightDec)} ${currencyLabel(to)}`;
+    const left = `${formatNumber(amount, leftDec)} ${currencyShort(from)}`;
+    const right = `${formatNumber(converted, rightDec)} ${currencyShort(to)}`;
+
     return `${left} ≈ ${right}`;
   }
 
-  function calculate(track = true, source = "input"){
+  function calculate(track=true, source="input") {
     const metaEl = document.getElementById("meta");
     const resultEl = document.getElementById("result");
 
@@ -246,22 +344,22 @@
     const to = document.getElementById("to").value;
     const amount = parseFloat(document.getElementById("amount").value);
 
-    if (usd_khr == null || usd_cny == null){
-      resultEl.innerText = translations[currentLang].loading;
-      metaEl.innerText = translations[currentLang].loading;
+    if (usd_khr == null || usd_cny == null) {
+      resultEl.innerText = i18n[currentLang].loading;
+      metaEl.innerText = i18n[currentLang].loading;
       setCopyEnabled(false);
       return;
     }
 
-    if (isNaN(amount)){
-      resultEl.innerText = translations[currentLang].enter;
+    if (isNaN(amount)) {
+      resultEl.innerText = i18n[currentLang].enter;
       setCopyEnabled(false);
       return;
     }
 
     const text = getResultText(amount, from, to);
     lastRateText = text;
-    resultEl.innerText = text || translations[currentLang].enter;
+    resultEl.innerText = text || i18n[currentLang].enter;
     setCopyEnabled(!!text);
 
     if (track && typeof gtag === "function") {
@@ -273,14 +371,14 @@
     }
   }
 
-  async function copyResult(){
+  async function copyResult() {
     if (!lastRateText) return;
 
     try {
       await navigator.clipboard.writeText(lastRateText);
       const btn = document.getElementById("copy");
       const old = btn.innerText;
-      btn.innerText = translations[currentLang].copied;
+      btn.innerText = i18n[currentLang].copied;
 
       if (typeof gtag === "function") {
         gtag('event', 'copy_result', {
@@ -303,11 +401,11 @@
     }
   }
 
-  async function loadRates(){
+  async function loadRates() {
     const metaEl = document.getElementById("meta");
     metaEl.style.cursor = "default";
     metaEl.onclick = null;
-    metaEl.innerText = translations[currentLang].loading;
+    metaEl.innerText = i18n[currentLang].loading;
 
     try {
       // 1) USD->KHR from your existing API
@@ -329,32 +427,31 @@
       usd_cny = d2 && d2.rates ? d2.rates.CNY : null;
       if (usd_cny == null) throw new Error("CNY_MISSING");
 
+      // Meta info (keep English-ish; concise)
       metaEl.innerText =
         `Rates loaded: 1 USD = ${Math.round(usd_khr)} KHR | 1 USD = ${formatNumber(usd_cny, 4)} CNY (for reference only)`;
 
+      // default amount + quick buttons + calculate
       renderQuickButtons();
-      if (!document.getElementById("amount").value) {
-        setDefaultAmountByFrom();
-      }
+      if (!document.getElementById("amount").value) setDefaultAmountByFrom();
       calculate(false);
 
     } catch (e) {
-      metaEl.innerText = translations[currentLang].tapRetry;
+      metaEl.innerText = i18n[currentLang].tapRetry;
       metaEl.style.cursor = "pointer";
       metaEl.onclick = () => loadRates();
       console.error(e);
     }
   }
 
-  function swapFromTo(){
+  function swapFromTo() {
     const fromEl = document.getElementById("from");
     const toEl = document.getElementById("to");
     const tmp = fromEl.value;
     fromEl.value = toEl.value;
     toEl.value = tmp;
 
-    // avoid From=To
-    if (fromEl.value === toEl.value){
+    if (fromEl.value === toEl.value) {
       toEl.value = (fromEl.value === "USD") ? "KHR" : "USD";
     }
 
@@ -363,12 +460,11 @@
     calculate(true, "swap_pair");
   }
 
-  // Events
+  // --- Events wiring ---
   document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
 
   document.getElementById("from").addEventListener("change", () => {
-    // avoid From=To
-    if (document.getElementById("from").value === document.getElementById("to").value){
+    if (document.getElementById("from").value === document.getElementById("to").value) {
       document.getElementById("to").value = (document.getElementById("from").value === "USD") ? "KHR" : "USD";
     }
     renderQuickButtons();
@@ -377,7 +473,7 @@
   });
 
   document.getElementById("to").addEventListener("change", () => {
-    if (document.getElementById("from").value === document.getElementById("to").value){
+    if (document.getElementById("from").value === document.getElementById("to").value) {
       document.getElementById("from").value = (document.getElementById("to").value === "USD") ? "KHR" : "USD";
     }
     renderQuickButtons();
@@ -392,20 +488,25 @@
     navigator.serviceWorker.register('/service-worker.js');
   }
 
-  // Auto language detect
-  const browserLang = navigator.language || navigator.userLanguage;
-  if (browserLang && browserLang.toLowerCase().startsWith("km")) setLang("km");
-  else setLang("en");
-
+  // --- INIT ---
   // Default pair: USD -> KHR
-  document.getElementById("from").value = "USD";
-  document.getElementById("to").value = "KHR";
-
-  // Default amount based on From
+  buildCurrencySelects("USD", "KHR");
   setDefaultAmountByFrom();
   renderQuickButtons();
 
-  // Init
+  // Language:
+  // 1) if user already selected before, use that
+  // 2) else detect from browser; if can't match -> en
+  let initialLang = "en";
+  try {
+    const saved = localStorage.getItem("lang_pref");
+    if (saved && (saved in i18n)) initialLang = saved;
+    else initialLang = detectLangFromBrowser();
+  } catch {
+    initialLang = detectLangFromBrowser();
+  }
+  setLang(initialLang, false);
+
   window.addEventListener("DOMContentLoaded", () => {
     loadRates();
   });
