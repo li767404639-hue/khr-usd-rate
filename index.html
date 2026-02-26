@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>USD ⇄ KHR Converter</title>
 
-<!-- Google Analytics -->
+<!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -20,164 +20,277 @@
 <meta name="theme-color" content="#ffffff">
 
 <style>
-body { font-family: system-ui, Arial; margin:20px; }
-.card { max-width:520px; margin:auto; padding:20px; border:1px solid #eee; border-radius:12px; }
-h1 { font-size:20px; }
-.row { display:flex; gap:10px; margin:10px 0; }
-input { flex:1; padding:10px; font-size:16px; }
-button { padding:10px; }
-.result { margin-top:15px; font-size:18px; }
-.meta { color:#666; font-size:13px; margin-bottom:10px; }
-.lang-switch { text-align:right; margin-bottom:10px; font-size:14px; cursor:pointer; }
-.footer { text-align:center;margin-top:30px;font-size:12px; }
+  body { font-family: system-ui, Arial; margin:20px; }
+  .card { max-width:560px; margin:auto; padding:20px; border:1px solid #eee; border-radius:12px; }
+  h1 { font-size:20px; margin:0 0 6px; }
+  .meta { color:#666; font-size:13px; margin-bottom:12px; }
+  .hint { font-size:13px; margin:10px 0 6px; color:#111; }
+  .row { display:flex; gap:10px; margin:10px 0; align-items:center; }
+  input { flex:1; padding:10px; font-size:16px; }
+  button { padding:10px 12px; cursor:pointer; }
+  .mini { padding:8px 10px; font-size:14px; border:1px solid #ddd; background:#fafafa; border-radius:10px; }
+  .mini:active { transform: translateY(1px); }
+  .lang-switch { text-align:right; margin-bottom:10px; font-size:14px; }
+  .lang-switch span { cursor:pointer; }
+  .quick { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .resultRow { display:flex; gap:10px; align-items:center; margin-top:14px; }
+  .result { flex:1; font-size:18px; }
+  .copyBtn { border:1px solid #ddd; background:#fff; border-radius:10px; padding:10px 12px; }
+  .copyBtn:disabled { opacity:0.6; cursor:not-allowed; }
+  .sub { font-size:11px; color:#777; margin-top:8px; line-height:1.4; }
+  .footer { text-align:center; margin-top:26px; font-size:12px; }
 </style>
 </head>
 
 <body>
 <div class="card">
 
-<div class="lang-switch">
-<span onclick="setLang('en')">EN</span> | 
-<span onclick="setLang('km')">ខ្មែរ</span>
-</div>
+  <div class="lang-switch">
+    <span onclick="setLang('en')">EN</span> |
+    <span onclick="setLang('km')">ខ្មែរ</span>
+  </div>
 
-<h1 id="title">USD ⇄ KHR Converter</h1>
-<div class="meta" id="meta">Loading official rate...</div>
+  <h1 id="title">USD ⇄ KHR Converter</h1>
+  <div class="meta" id="meta">Loading official rate...</div>
 
-<div class="row">
-<input id="amount" type="number" placeholder="Enter amount" />
-<button id="swap">USD → KHR</button>
-</div>
+  <div class="hint" id="hint">Convert before you exchange money.</div>
 
-<div class="result" id="result">Enter amount</div>
+  <div class="row">
+    <input id="amount" type="number" inputmode="decimal" placeholder="Enter amount" />
+    <button id="swap" class="mini">USD → KHR</button>
+  </div>
 
-<div style="font-size:11px;color:#777;margin-top:6px;">
-Source: Public daily reference rate. This tool does not provide financial services.
-</div>
+  <div class="quick" id="quickButtons"></div>
 
-<div class="footer">
-  <a href="/privacy.html">Privacy</a> |
-  <a href="/terms.html">Terms</a> |
-  <a href="/disclaimer.html">Disclaimer</a>
-</div>
+  <div class="resultRow">
+    <div class="result" id="result">Enter amount</div>
+    <button id="copy" class="copyBtn" disabled>Copy</button>
+  </div>
+
+  <div class="sub">
+    Source: Public daily reference rate. This tool does not provide financial services.
+  </div>
+
+  <div class="footer">
+    <a href="/privacy.html">Privacy</a> |
+    <a href="/terms.html">Terms</a> |
+    <a href="/disclaimer.html">Disclaimer</a>
+  </div>
 
 </div>
 
 <script>
+  let usdKhr = null;
+  let mode = "USD2KHR"; // USD2KHR or KHR2USD
+  let currentLang = "en";
 
-let usdKhr = null;
-let mode = "USD2KHR";
-let currentLang = "en";
+  const DEFAULT_USD = 50;
+  const QUICK_USD = [50, 75, 120];
 
-const translations = {
-en: {
-title: "USD ⇄ KHR Converter",
-enter: "Enter amount",
-loading: "Loading official rate...",
-swap1: "USD → KHR",
-swap2: "KHR → USD"
-},
-km: {
-title: "កម្មវិធីបម្លែង USD ⇄ KHR",
-enter: "បញ្ចូលចំនួន",
-loading: "កំពុងផ្ទុកអត្រាផ្លូវការ...",
-swap1: "USD → KHR",
-swap2: "KHR → USD"
-}
-};
+  const translations = {
+    en: {
+      title: "USD ⇄ KHR Converter",
+      hint: "Convert before you exchange money.",
+      enter: "Enter amount",
+      loading: "Loading official rate...",
+      swap1: "USD → KHR",
+      swap2: "KHR → USD",
+      copy: "Copy",
+      copied: "Copied",
+      tapRetry: "Failed to load rate. Tap to retry."
+    },
+    km: {
+      title: "កម្មវិធីបម្លែង USD ⇄ KHR",
+      hint: "បម្លែងមុនពេលអ្នកប្តូរប្រាក់។",
+      enter: "បញ្ចូលចំនួន",
+      loading: "កំពុងផ្ទុកអត្រាផ្លូវការ...",
+      swap1: "USD → KHR",
+      swap2: "KHR → USD",
+      copy: "ចម្លង",
+      copied: "បានចម្លង",
+      tapRetry: "ផ្ទុកអត្រាមិនបាន។ ចុចដើម្បីសាកល្បងម្តងទៀត។"
+    }
+  };
 
-function setLang(lang){
-currentLang = lang;
-document.getElementById("title").innerText = translations[lang].title;
-document.getElementById("amount").placeholder = translations[lang].enter;
-updateSwapText();
-}
+  function setLang(lang){
+    currentLang = lang;
+    document.getElementById("title").innerText = translations[lang].title;
+    document.getElementById("hint").innerText = translations[lang].hint;
+    document.getElementById("amount").placeholder = translations[lang].enter;
+    document.getElementById("copy").innerText = translations[lang].copy;
+    updateSwapText();
+    renderQuickButtons();
+    calculate(false);
+  }
 
-function updateSwapText(){
-if(mode==="USD2KHR"){
-document.getElementById("swap").innerText = translations[currentLang].swap1;
-}else{
-document.getElementById("swap").innerText = translations[currentLang].swap2;
-}
-}
+  function updateSwapText(){
+    document.getElementById("swap").innerText =
+      (mode === "USD2KHR") ? translations[currentLang].swap1 : translations[currentLang].swap2;
+  }
 
-async function loadRate() {
-const metaEl = document.getElementById("meta");
-try {
-const controller = new AbortController();
-const timer = setTimeout(() => controller.abort(), 10000);
+  function renderQuickButtons(){
+    const wrap = document.getElementById("quickButtons");
+    wrap.innerHTML = "";
 
-const r = await fetch('/api/rate?ts=' + Date.now(), {
-cache: "no-store",
-signal: controller.signal
-});
+    // 仅在 USD→KHR 时显示 USD 快捷按钮（更符合换汇场景）
+    if (mode !== "USD2KHR") return;
 
-clearTimeout(timer);
+    QUICK_USD.forEach(v => {
+      const b = document.createElement("button");
+      b.className = "mini";
+      b.type = "button";
+      b.textContent = `${v} USD`;
+      b.onclick = () => {
+        document.getElementById("amount").value = v;
+        calculate(true, "quick");
+      };
+      wrap.appendChild(b);
+    });
+  }
 
-if (!r.ok) throw new Error("HTTP_" + r.status);
+  async function loadRate() {
+    const metaEl = document.getElementById("meta");
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10000);
 
-const data = await r.json();
-usdKhr = data.usd_khr;
+      const r = await fetch('/api/rate?ts=' + Date.now(), {
+        cache: "no-store",
+        signal: controller.signal
+      });
 
-metaEl.innerText =
-"Official daily reference rate (" + data.date + "): 1 USD = " + usdKhr + " KHR (for reference only)";
+      clearTimeout(timer);
+      if (!r.ok) throw new Error("HTTP_" + r.status);
 
-} catch (e) {
-metaEl.innerText = "Failed to load rate. Tap to retry.";
-metaEl.style.cursor = "pointer";
-metaEl.onclick = () => {
-metaEl.innerText = "Loading official rate...";
-loadRate();
-};
-}
-}
+      const data = await r.json();
+      usdKhr = data.usd_khr;
 
-function calculate() {
-const amount = parseFloat(document.getElementById("amount").value);
-if (!usdKhr || isNaN(amount)) {
-document.getElementById("result").innerText = translations[currentLang].enter;
-return;
-}
+      metaEl.style.cursor = "default";
+      metaEl.onclick = null;
+      metaEl.innerText =
+        "Official daily reference rate (" + data.date + "): 1 USD = " + usdKhr + " KHR (for reference only)";
 
-if (mode === "USD2KHR") {
-const khr = amount * usdKhr;
-document.getElementById("result").innerText =
-amount + " USD ≈ " + Math.round(khr) + " KHR";
-} else {
-const usd = amount / usdKhr;
-document.getElementById("result").innerText =
-amount + " KHR ≈ " + usd.toFixed(2) + " USD";
-}
+      // 默认填充并自动计算（提升转化）
+      if (!document.getElementById("amount").value) {
+        document.getElementById("amount").value = DEFAULT_USD;
+      }
+      calculate(false);
 
-// GA 事件统计
-gtag('event', 'calculate', {
-  currency_mode: mode
-});
-}
+    } catch (e) {
+      metaEl.innerText = translations[currentLang].tapRetry;
+      metaEl.style.cursor = "pointer";
+      metaEl.onclick = () => {
+        metaEl.innerText = translations[currentLang].loading;
+        loadRate();
+      };
+      console.error(e);
+    }
+  }
 
-document.getElementById("amount").addEventListener("input", calculate);
+  function getResultText(amount){
+    if (!usdKhr || isNaN(amount)) return "";
 
-document.getElementById("swap").addEventListener("click", function() {
-mode = mode === "USD2KHR" ? "KHR2USD" : "USD2KHR";
-updateSwapText();
-calculate();
-});
+    if (mode === "USD2KHR") {
+      const khr = amount * usdKhr;
+      return amount + " USD ≈ " + Math.round(khr) + " KHR";
+    } else {
+      const usd = amount / usdKhr;
+      return amount + " KHR ≈ " + usd.toFixed(2) + " USD";
+    }
+  }
 
-if ('serviceWorker' in navigator) {
-navigator.serviceWorker.register('/service-worker.js');
-}
+  function setCopyEnabled(enabled){
+    const btn = document.getElementById("copy");
+    btn.disabled = !enabled;
+  }
 
-const browserLang = navigator.language || navigator.userLanguage;
-if (browserLang && browserLang.startsWith("km")) {
-setLang("km");
-} else {
-setLang("en");
-}
+  function calculate(track = true, source = "input") {
+    const amount = parseFloat(document.getElementById("amount").value);
+    const resultEl = document.getElementById("result");
 
-window.addEventListener("DOMContentLoaded", () => {
-loadRate();
-});
+    if (!usdKhr) {
+      resultEl.innerText = translations[currentLang].loading;
+      setCopyEnabled(false);
+      return;
+    }
 
+    if (isNaN(amount)) {
+      resultEl.innerText = translations[currentLang].enter;
+      setCopyEnabled(false);
+      return;
+    }
+
+    const text = getResultText(amount);
+    resultEl.innerText = text;
+    setCopyEnabled(!!text);
+
+    // GA 事件统计（只在用户操作触发时统计；初始化不统计）
+    if (track && typeof gtag === "function") {
+      gtag('event', 'calculate', {
+        currency_mode: mode,
+        source: source
+      });
+    }
+  }
+
+  async function copyResult(){
+    const text = document.getElementById("result").innerText || "";
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById("copy");
+      const old = btn.innerText;
+      btn.innerText = translations[currentLang].copied;
+
+      // GA：复制事件（用于衡量“分享意图”）
+      if (typeof gtag === "function") {
+        gtag('event', 'copy_result', { currency_mode: mode });
+      }
+
+      setTimeout(() => btn.innerText = old, 1200);
+    } catch (e) {
+      // 兼容性兜底（老浏览器）
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      } catch {}
+      console.error(e);
+    }
+  }
+
+  document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
+
+  document.getElementById("swap").addEventListener("click", function() {
+    mode = (mode === "USD2KHR") ? "KHR2USD" : "USD2KHR";
+    updateSwapText();
+    renderQuickButtons();
+    calculate(true, "swap");
+  });
+
+  document.getElementById("copy").addEventListener("click", copyResult);
+
+  // PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+  }
+
+  // 自动语言检测（不限制广告语言更重要，站内自动适配）
+  const browserLang = navigator.language || navigator.userLanguage;
+  if (browserLang && browserLang.toLowerCase().startsWith("km")) {
+    setLang("km");
+  } else {
+    setLang("en");
+  }
+
+  // 页面加载后拉汇率
+  window.addEventListener("DOMContentLoaded", () => {
+    loadRate();
+  });
 </script>
 
 </body>
