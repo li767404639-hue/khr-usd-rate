@@ -52,23 +52,33 @@
     align-items:center;
     justify-content:space-between;
     margin-bottom:12px;
+    gap:12px;
   }
 
   .brand{
     display:flex; gap:10px; align-items:center;
+    min-width: 0;
   }
 
   .logo{
-    width:38px; height:38px;
+    width:40px;
+    height:40px;
     border-radius:12px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
-    box-shadow: 0 10px 22px rgba(11,31,74,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 20px rgba(11,31,74,.25);
+    flex: 0 0 auto;
   }
 
   .brand h1{
     font-size:16px;
     margin:0;
     letter-spacing:.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .lang{
@@ -77,6 +87,7 @@
     display:flex;
     gap:8px;
     align-items:center;
+    flex: 0 0 auto;
   }
   .lang span{
     cursor:pointer;
@@ -250,9 +261,19 @@
 
   <div class="topbar">
     <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
+      <div class="logo" aria-hidden="true">
+        <!-- currency icon (svg) -->
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="white" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                   10-4.48 10-10S17.52 2 12 2zm1 17.93V20h-2v-.07
+                   c-3.39-.49-6-3.39-6-6.93h2c0 2.76 2.24 5 5 5s5-2.24 5-5
+                   c0-2.41-1.72-4.41-4-4.9V8h2v.1c3.39.49 6 3.39 6 6.9
+                   0 3.54-2.61 6.44-6 6.93z"/>
+        </svg>
+      </div>
       <h1 id="titleTop">Currency Converter</h1>
     </div>
+
     <div class="lang" id="langSwitch">
       <span id="btnEN" onclick="setLang('en', true)">EN</span>
       <span id="btnKM" onclick="setLang('km', true)">ខ្មែរ</span>
@@ -380,7 +401,7 @@
     const raw = (navigator.language || navigator.userLanguage || "").toLowerCase();
     if (raw.startsWith("km")) return "km";
     if (raw.startsWith("zh")) return "zh";
-    return "en"; // fallback for unknown/other
+    return "en";
   }
 
   function setLang(lang, userInitiated=false) {
@@ -437,14 +458,12 @@
     fromSel.value = fromValue;
     toSel.value = toValue;
 
-    // avoid same
     if (fromSel.value === toSel.value) {
       toSel.value = (fromSel.value === "USD") ? "KHR" : "USD";
     }
   }
 
   function currencyShort(code) {
-    // Result text currency name
     if (currentLang === "zh") {
       if (code === "USD") return "美元";
       if (code === "KHR") return "瑞尔";
@@ -485,7 +504,6 @@
     if (defaults.length) document.getElementById("amount").value = defaults[0];
   }
 
-  // Rate for from->to (bridge via USD using usd_khr & usd_cny)
   function getRate(from, to) {
     if (from === to) return 1;
     if (usd_khr == null || usd_cny == null) return null;
@@ -592,7 +610,7 @@
     metaEl.innerText = i18n[currentLang].loading;
 
     try {
-      // 1) USD->KHR from your existing API
+      // USD->KHR
       const c1 = new AbortController();
       const t1 = setTimeout(() => c1.abort(), 10000);
       const r1 = await fetch('/api/rate?ts=' + Date.now(), { cache: "no-store", signal: c1.signal });
@@ -601,7 +619,7 @@
       const d1 = await r1.json();
       usd_khr = d1.usd_khr;
 
-      // 2) USD->CNY from open.er-api.com (no key)
+      // USD->CNY (external)
       const c2 = new AbortController();
       const t2 = setTimeout(() => c2.abort(), 10000);
       const r2 = await fetch('https://open.er-api.com/v6/latest/USD', { cache: "no-store", signal: c2.signal });
@@ -644,6 +662,7 @@
 
   // ---------- Wire events ----------
   document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
+
   document.getElementById("from").addEventListener("change", () => {
     if (document.getElementById("from").value === document.getElementById("to").value) {
       document.getElementById("to").value = (document.getElementById("from").value === "USD") ? "KHR" : "USD";
@@ -652,6 +671,7 @@
     setDefaultAmountByFrom();
     calculate(true, "change_from");
   });
+
   document.getElementById("to").addEventListener("change", () => {
     if (document.getElementById("from").value === document.getElementById("to").value) {
       document.getElementById("from").value = (document.getElementById("to").value === "USD") ? "KHR" : "USD";
@@ -659,6 +679,7 @@
     renderQuickButtons();
     calculate(true, "change_to");
   });
+
   document.getElementById("swap").addEventListener("click", swapFromTo);
   document.getElementById("copy").addEventListener("click", copyResult);
 
@@ -668,12 +689,11 @@
   }
 
   // ---------- INIT ----------
-  // Default currency pair: USD -> KHR
   buildCurrencySelects("USD", "KHR");
   setDefaultAmountByFrom();
   renderQuickButtons();
 
-  // Language: prefer saved; else browser; else en
+  // language: saved > browser-detect > en
   let initialLang = "en";
   try {
     const saved = localStorage.getItem("lang_pref");
