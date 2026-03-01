@@ -255,6 +255,31 @@
     text-decoration:none;
   }
   .footer a:hover{ text-decoration:underline; }
+
+  /* ====== ✅ 新增：转账兴趣测试区域样式（不影响原样式） ====== */
+  .transferTest{
+    margin-top:14px;
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:16px;
+    padding:14px 14px;
+    background:#fff;
+  }
+  .transferText{
+    font-size:13px;
+    color:#111827;
+    margin-bottom:10px;
+  }
+  .transferBtn{
+    width:100%;
+    border:none;
+    border-radius:14px;
+    padding:12px 14px;
+    background: var(--primary);
+    color: var(--btnText);
+    font-size:14px;
+    cursor:pointer;
+  }
+  .transferBtn:hover{ background: var(--primary2); }
 </style>
 </head>
 
@@ -317,6 +342,12 @@
       </div>
     </div>
 
+    <!-- ====== ✅ 新增：转账兴趣测试（只统计，不跳转） ====== -->
+    <div class="transferTest" id="transferTest">
+      <div class="transferText" id="transferText">Need to send money abroad?</div>
+      <button class="transferBtn" id="transferBtn" type="button">Compare transfer options</button>
+    </div>
+
     <div class="footer">
       <a href="/privacy.html" id="linkPrivacy">Privacy</a> ·
       <a href="/terms.html" id="linkTerms">Terms</a> ·
@@ -359,7 +390,10 @@
       ccy: { USD: "USD", KHR: "KHR", CNY: "RMB (CNY)" },
       linkPrivacy: "Privacy",
       linkTerms: "Terms",
-      linkDisclaimer: "Disclaimer"
+      linkDisclaimer: "Disclaimer",
+      /* ✅ 新增：转账文案 */
+      transferText: "Need to send money abroad?",
+      transferBtn: "Compare transfer options"
     },
     km: {
       title: "កម្មវិធីបម្លែងប្រាក់",
@@ -377,7 +411,10 @@
       ccy: { USD: "USD", KHR: "KHR", CNY: "RMB (CNY)" },
       linkPrivacy: "Privacy",
       linkTerms: "Terms",
-      linkDisclaimer: "Disclaimer"
+      linkDisclaimer: "Disclaimer",
+      /* ✅ 新增：转账文案 */
+      transferText: "ត្រូវការផ្ញើប្រាក់ទៅក្រៅប្រទេសទេ?",
+      transferBtn: "ប្រៀបធៀបជម្រើសផ្ទេរប្រាក់"
     },
     zh: {
       title: "汇率换算工具",
@@ -395,7 +432,10 @@
       ccy: { USD: "美元 (USD)", KHR: "瑞尔 (KHR)", CNY: "人民币 (CNY)" },
       linkPrivacy: "隐私政策",
       linkTerms: "使用条款",
-      linkDisclaimer: "免责声明"
+      linkDisclaimer: "免责声明",
+      /* ✅ 新增：转账文案 */
+      transferText: "需要跨境转账/汇款吗？",
+      transferBtn: "对比转账方案"
     }
   };
 
@@ -429,6 +469,12 @@
     document.getElementById("linkPrivacy").innerText = i18n[currentLang].linkPrivacy;
     document.getElementById("linkTerms").innerText = i18n[currentLang].linkTerms;
     document.getElementById("linkDisclaimer").innerText = i18n[currentLang].linkDisclaimer;
+
+    /* ✅ 新增：同步转账按钮文案（不影响原逻辑） */
+    const tt = document.getElementById("transferText");
+    const tb = document.getElementById("transferBtn");
+    if (tt) tt.innerText = i18n[currentLang].transferText;
+    if (tb) tb.innerText = i18n[currentLang].transferBtn;
 
     // rebuild currency dropdown labels (keep selection)
     const fromVal = document.getElementById("from").value || "USD";
@@ -684,6 +730,17 @@
 
   document.getElementById("swap").addEventListener("click", swapFromTo);
   document.getElementById("copy").addEventListener("click", copyResult);
+
+  /* ====== ✅ 新增：转账兴趣按钮事件（只统计，不跳转） ====== */
+  document.getElementById("transferBtn").addEventListener("click", () => {
+    if (typeof gtag === "function") {
+      gtag('event', 'transfer_interest', {
+        from_currency: document.getElementById("from").value,
+        to_currency: document.getElementById("to").value,
+        lang: currentLang
+      });
+    }
+  });
 
   // PWA
   if ('serviceWorker' in navigator) {
