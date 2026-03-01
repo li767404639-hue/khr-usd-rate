@@ -1,45 +1,48 @@
+// api/rate.js
 export default async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
+
   try {
-    const url = "https://www.tax.gov.kh/en/exchange-rate";
+    // 使用稳定 JSON 源：USD -> KHR
+    const url = "https://open.er-api.com/v6/latest/USD";
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 9000);
 
     const r = await fetch(url, {
-      headers: {
-        "user-agent": "Mozilla/5.0 (RateBot; +https://example.com)",
-        "accept-language": "en-US,en;q=0.9"
-      }
+      signal: controller.signal,
+      headers: { "accept": "application/json" }
     });
 
-    const html = await r.text();
+    clearTimeout(timer);
 
-    // Extract the first occurrence of a date + USD/KHR + rate number
-    const rowRegex =
-      /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}[\s\S]{0,600}?USD\/KHR[\s\S]{0,200}?(\d{3,5})/i;
-
-    const m = html.match(rowRegex);
-    if (!m) {
-      res.status(502).json({ error: "RATE_PARSE_FAILED" });
-      return;
+    if (!r.ok) {
+      return res.status(502).json({ error: "RATE_FETCH_FAILED", status: r.status });
     }
 
-    const dateMatch = m[0].match(
-      /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i
-    );
-    const date = dateMatch ? dateMatch[0] : "";
+    const data = await r.json();
+    const khr = data?.rates?.KHR;
 
-    const rate = parseInt(m[2], 10);
-    if (!rate || rate < 1000 || rate > 10000) {
-      res.status(502).json({ error: "RATE_INVALID" });
-      return;
+    if (!khr || typeof khr !== "number") {
+      return res.status(502).json({ error: "RATE_BAD_RESPONSE" });
     }
 
-    // Cache at edge for 1 hour; allow stale while revalidate for 1 day
-    res.setHeader("cache-control", "s-maxage=3600, stale-while-revalidate=86400");
-    res.status(200).json({
-      source: "GDT (Official daily rate published by NBC)",
-      date,
-      usd_khr: rate
+    // 给前端的 date 字段：简单可用
+    const date =
+      (typeof data?.time_last_update_utc === "string" && data.time_last_update_utc.slice(5, 16)) ||
+      new Date().toISOString().slice(0, 10);
+
+    return res.status(200).json({
+      usd_khr: Math.round(khr),
+      date
     });
   } catch (e) {
-    res.status(500).json({ error: "SERVER_ERROR" });
+    // 兜底：避免前端卡 Loading
+    return res.status(200).json({
+      usd_khr: 4100,
+      date: new Date().toISOString().slice(0, 10),
+      fallback: true,
+      error: "RATE_RUNTIME_ERROR"
+    });
   }
 }
