@@ -393,7 +393,7 @@
       linkDisclaimer: "Disclaimer",
       /* ✅ 新增：转账文案 */
       transferText: "Need to send money abroad?",
-      transferBtn: "Compare transfer options"
+      transferBtn: "Compare transfer fees"
     },
     km: {
       title: "កម្មវិធីបម្លែងប្រាក់",
@@ -414,7 +414,7 @@
       linkDisclaimer: "Disclaimer",
       /* ✅ 新增：转账文案 */
       transferText: "ត្រូវការផ្ញើប្រាក់ទៅក្រៅប្រទេសទេ?",
-      transferBtn: "ប្រៀបធៀបជម្រើសផ្ទេរប្រាក់"
+      transferBtn: "ប្រៀបធៀបថ្លៃផ្ទេរប្រាក់"
     },
     zh: {
       title: "汇率换算工具",
@@ -435,7 +435,7 @@
       linkDisclaimer: "免责声明",
       /* ✅ 新增：转账文案 */
       transferText: "需要跨境转账/汇款吗？",
-      transferBtn: "对比转账方案"
+      transferBtn: "比较转账手续费"
     }
   };
 
@@ -466,6 +466,8 @@
     document.getElementById("amount").placeholder = i18n[currentLang].enter;
     document.getElementById("copy").innerText = i18n[currentLang].copy;
     document.getElementById("subText").innerText = i18n[currentLang].sub;
+    const btn = document.getElementById("transferBtn");
+    if (btn) btn.innerText = i18n[currentLang].transferBtn;
     document.getElementById("linkPrivacy").innerText = i18n[currentLang].linkPrivacy;
     document.getElementById("linkTerms").innerText = i18n[currentLang].linkTerms;
     document.getElementById("linkDisclaimer").innerText = i18n[currentLang].linkDisclaimer;
