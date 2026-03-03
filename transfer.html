@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>International Transfer Comparison</title>
+<title>USD to Cambodia Transfer Comparison</title>
 <meta name="theme-color" content="#0B1F4A">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
@@ -17,18 +17,19 @@ gtag('config', 'G-3BT4GY2B36');
 <style>
 :root{
 --primary:#0B1F4A;
+--green:#047857;
 --border:#E5E7EB;
 --muted:#6B7280;
---bg:#F5F7FB;
+--bg:#F3F6FB;
 }
 body{
 margin:0;
-font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+font-family:system-ui,-apple-system,Segoe UI,Roboto;
 background:var(--bg);
 color:#111827;
 }
 .container{
-max-width:1000px;
+max-width:1100px;
 margin:30px auto;
 padding:0 16px;
 }
@@ -38,20 +39,15 @@ justify-content:space-between;
 align-items:center;
 margin-bottom:20px;
 }
-.logo{
-font-weight:700;
-font-size:18px;
-}
+.logo{font-weight:700;font-size:18px;}
 .lang span{
 cursor:pointer;
-margin-left:8px;
+margin-left:10px;
 font-size:13px;
 color:var(--muted);
 }
-.lang .active{
-font-weight:600;
-color:var(--primary);
-}
+.lang .active{color:var(--primary);font-weight:600;}
+
 .card{
 background:white;
 border:1px solid var(--border);
@@ -59,43 +55,54 @@ border-radius:14px;
 padding:20px;
 margin-bottom:20px;
 }
-h1{
-margin:0 0 8px;
-font-size:22px;
-}
-.sub{
-color:var(--muted);
-font-size:14px;
-line-height:1.5;
-}
+
+h1{margin:0 0 8px;font-size:24px;}
+.sub{color:var(--muted);font-size:14px;}
+
 .notice{
 background:#F9FAFB;
 border:1px solid var(--border);
 padding:14px;
-border-radius:12px;
+border-radius:10px;
 font-size:13px;
-color:#374151;
 margin-top:15px;
 }
+
+input{
+padding:10px;
+border:1px solid var(--border);
+border-radius:8px;
+font-size:14px;
+width:150px;
+}
+
 .table{
 width:100%;
 border-collapse:collapse;
-margin-top:15px;
+margin-top:20px;
 }
 .table th,.table td{
-border-bottom:1px solid var(--border);
 padding:14px 10px;
-text-align:left;
+border-bottom:1px solid var(--border);
 font-size:14px;
 }
 .table th{
 background:#F3F4F6;
-font-weight:600;
 }
+
+.best{
+background:#ECFDF5;
+}
+.bestTag{
+color:var(--green);
+font-weight:600;
+font-size:12px;
+}
+
 .btn{
 background:var(--primary);
 color:white;
-padding:10px 14px;
+padding:9px 14px;
 border-radius:8px;
 text-decoration:none;
 font-size:13px;
@@ -107,16 +114,6 @@ font-size:12px;
 color:var(--muted);
 margin-top:30px;
 }
-.footer a{
-color:var(--muted);
-text-decoration:none;
-}
-.footer a:hover{text-decoration:underline;}
-.back{
-font-size:13px;
-text-decoration:none;
-color:var(--muted);
-}
 </style>
 </head>
 
@@ -124,7 +121,7 @@ color:var(--muted);
 <div class="container">
 
 <div class="header">
-<div class="logo" id="brandTitle"></div>
+<div class="logo" id="brand"></div>
 <div class="lang">
 <span id="btnEN" onclick="setLang('en')">EN</span>
 <span id="btnKM" onclick="setLang('km')">ខ្មែរ</span>
@@ -132,12 +129,17 @@ color:var(--muted);
 </div>
 </div>
 
-<a href="/" class="back" onclick="trackBack()" id="backText"></a>
-
 <div class="card">
 <h1 id="title"></h1>
 <div class="sub" id="subtitle"></div>
-<div class="notice" id="noticeText"></div>
+
+<div style="margin-top:15px;">
+<label id="amountLabel"></label>
+<input type="number" id="amount" value="1000" oninput="calculate()">
+USD
+</div>
+
+<div class="notice" id="notice"></div>
 </div>
 
 <div class="card">
@@ -145,142 +147,126 @@ color:var(--muted);
 <thead>
 <tr>
 <th id="colProvider"></th>
-<th id="colFees"></th>
-<th id="colSpeed"></th>
-<th id="colBest"></th>
+<th id="colFee"></th>
+<th id="colRate"></th>
+<th id="colReceive"></th>
 <th></th>
 </tr>
 </thead>
-<tbody id="tableBody"></tbody>
+<tbody id="tbody"></tbody>
 </table>
 </div>
 
 <div class="footer">
-<a href="/privacy.html">Privacy</a> ·
-<a href="/terms.html">Terms</a> ·
-<a href="/disclaimer.html">Disclaimer</a>
-<div style="margin-top:6px;">© <span id="year"></span></div>
+Privacy · Terms · Disclaimer
 </div>
 
 </div>
 
 <script>
-document.getElementById("year").innerText=new Date().getFullYear();
+
+let currentLang="en";
+
+const providers=[
+{name:"A",fee:5,rate:4010},
+{name:"B",fee:8,rate:4020},
+{name:"C",fee:3,rate:3995}
+];
+
+function calculate(){
+const amt=parseFloat(document.getElementById("amount").value)||0;
+const tbody=document.getElementById("tbody");
+tbody.innerHTML="";
+let bestReceive=0;
+providers.forEach(p=>{
+const receive=(amt-p.fee)*p.rate;
+if(receive>bestReceive) bestReceive=receive;
+});
+providers.forEach(p=>{
+const receive=(amt-p.fee)*p.rate;
+const tr=document.createElement("tr");
+if(receive===bestReceive) tr.classList.add("best");
+tr.innerHTML=`
+<td>${p.name} ${receive===bestReceive?'<span class="bestTag">Best</span>':''}</td>
+<td>$${p.fee}</td>
+<td>${p.rate}</td>
+<td>${Math.round(receive).toLocaleString()} KHR</td>
+<td><a href="#" class="btn" onclick="trackProvider('${p.name}')">${i18n[currentLang].visit}</a></td>
+`;
+tbody.appendChild(tr);
+});
+}
 
 function trackProvider(name){
 if(typeof gtag==="function"){
-gtag("event","provider_click",{provider_name:name,page:"transfer_compare"});
+gtag("event","provider_click",{provider:name});
 }
 }
-function trackBack(){
-if(typeof gtag==="function"){
-gtag("event","back_to_calculator",{page:"transfer_compare"});
-}
-}
-
-let currentLang="en";
 
 const i18n={
 en:{
 brand:"Transfer Comparison",
-back:"← Back to calculator",
-title:"Compare International Transfer Services",
-subtitle:"Review fees, exchange rates and delivery times before sending USD to Cambodia.",
-notice:"This page is for informational comparison only. We do not provide financial services. Some outbound links may be affiliate links.",
+title:"Compare USD to Cambodia Transfers",
+subtitle:"Estimate final received amount after fees and rate.",
+amountLabel:"Send amount:",
+notice:"Independent comparison only. We are not a financial institution.",
 provider:"Provider",
-fees:"Fees",
-speed:"Speed",
-best:"Best For",
-visit:"Visit",
-rows:[
-["Provider A","Low–Medium","Same day–2 days","Most users"],
-["Provider B","Medium","Minutes–1 day","Urgent transfers"],
-["Provider C","Low","1–3 days","Budget transfers"]
-]
+fee:"Fee",
+rate:"Exchange Rate",
+receive:"You Receive",
+visit:"Visit"
 },
 zh:{
-brand:"转账平台对比",
-back:"← 返回换汇工具",
-title:"国际转账平台对比",
-subtitle:"在向柬埔寨转账前，对比手续费、汇率与到账时间。",
-notice:"本页面仅作信息对比展示，我们不提供金融服务。部分链接可能为联盟推广链接。",
+brand:"转账对比",
+title:"美元转柬埔寨对比",
+subtitle:"估算扣除手续费后的实际到账金额。",
+amountLabel:"汇出金额：",
+notice:"本页面为独立信息对比，并非金融机构。",
 provider:"平台",
-fees:"手续费",
-speed:"到账速度",
-best:"适合人群",
-visit:"访问",
-rows:[
-["平台 A","低–中","当天–2天","大多数用户"],
-["平台 B","中","分钟–1天","急用转账"],
-["平台 C","低","1–3天","成本优先"]
-]
+fee:"手续费",
+rate:"汇率",
+receive:"到账金额",
+visit:"访问"
 },
 km:{
 brand:"ការប្រៀបធៀបការផ្ទេរប្រាក់",
-back:"← ត្រឡប់ទៅម៉ាស៊ីនគណនា",
-title:"ប្រៀបធៀបសេវាផ្ទេរប្រាក់អន្តរជាតិ",
-subtitle:"ពិនិត្យថ្លៃសេវា អត្រាប្តូរប្រាក់ និងពេលវេលាមុនផ្ញើ USD ទៅកម្ពុជា។",
-notice:"ទំព័រនេះសម្រាប់ប្រៀបធៀបព័ត៌មានប៉ុណ្ណោះ មិនមែនជាសេវាហិរញ្ញវត្ថុទេ។ តំណខ្លះអាចជាតំណដៃគូ។",
+title:"ប្រៀបធៀប USD ទៅកម្ពុជា",
+subtitle:"គណនាចំនួនប្រាក់ដែលទទួលបានបន្ទាប់ពីថ្លៃសេវា។",
+amountLabel:"ចំនួនផ្ញើ៖",
+notice:"ទំព័រនេះសម្រាប់ប្រៀបធៀបព័ត៌មានប៉ុណ្ណោះ។",
 provider:"អ្នកផ្តល់សេវា",
-fees:"ថ្លៃសេវា",
-speed:"ល្បឿន",
-best:"សមស្របសម្រាប់",
-visit:"ចូលមើល",
-rows:[
-["អ្នកផ្តល់សេវា A","ទាប–មធ្យម","ថ្ងៃតែមួយ–២ថ្ងៃ","អ្នកប្រើភាគច្រើន"],
-["អ្នកផ្តល់សេវា B","មធ្យម","នាទី–១ថ្ងៃ","ផ្ទេរបន្ទាន់"],
-["អ្នកផ្តល់សេវា C","ទាប","១–៣ថ្ងៃ","ចំណាយទាប"]
-]
+fee:"ថ្លៃ",
+rate:"អត្រា",
+receive:"ទទួលបាន",
+visit:"ចូលមើល"
 }
 };
 
 function setLang(lang){
 currentLang=lang;
 localStorage.setItem("lang_pref",lang);
-
-document.querySelectorAll(".lang span").forEach(el=>el.classList.remove("active"));
+document.querySelectorAll(".lang span").forEach(e=>e.classList.remove("active"));
 document.getElementById("btn"+lang.toUpperCase()).classList.add("active");
-
 const t=i18n[lang];
-document.getElementById("brandTitle").innerText=t.brand;
-document.getElementById("backText").innerText=t.back;
+document.getElementById("brand").innerText=t.brand;
 document.getElementById("title").innerText=t.title;
 document.getElementById("subtitle").innerText=t.subtitle;
-document.getElementById("noticeText").innerText=t.notice;
+document.getElementById("amountLabel").innerText=t.amountLabel;
+document.getElementById("notice").innerText=t.notice;
 document.getElementById("colProvider").innerText=t.provider;
-document.getElementById("colFees").innerText=t.fees;
-document.getElementById("colSpeed").innerText=t.speed;
-document.getElementById("colBest").innerText=t.best;
-
-const tbody=document.getElementById("tableBody");
-tbody.innerHTML="";
-t.rows.forEach(row=>{
-const tr=document.createElement("tr");
-row.forEach(cell=>{
-const td=document.createElement("td");
-td.innerText=cell;
-tr.appendChild(td);
-});
-const tdBtn=document.createElement("td");
-const a=document.createElement("a");
-a.href="#";
-a.target="_blank";
-a.className="btn";
-a.innerText=t.visit;
-a.onclick=()=>trackProvider(row[0]);
-tdBtn.appendChild(a);
-tr.appendChild(tdBtn);
-tbody.appendChild(tr);
-});
+document.getElementById("colFee").innerText=t.fee;
+document.getElementById("colRate").innerText=t.rate;
+document.getElementById("colReceive").innerText=t.receive;
+calculate();
 }
 
 (function init(){
 let saved=localStorage.getItem("lang_pref");
 if(saved&&i18n[saved]) setLang(saved);
 else{
-const lang=navigator.language;
-if(lang.startsWith("zh")) setLang("zh");
-else if(lang.startsWith("km")) setLang("km");
+const l=navigator.language;
+if(l.startsWith("zh")) setLang("zh");
+else if(l.startsWith("km")) setLang("km");
 else setLang("en");
 }
 })();
