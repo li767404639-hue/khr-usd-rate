@@ -733,16 +733,20 @@
   document.getElementById("swap").addEventListener("click", swapFromTo);
   document.getElementById("copy").addEventListener("click", copyResult);
 
-  /* ====== ✅ 新增：转账兴趣按钮事件（只统计，不跳转） ====== */
-  document.getElementById("transferBtn").addEventListener("click", () => {
-    if (typeof gtag === "function") {
-      gtag('event', 'transfer_interest', {
-        from_currency: document.getElementById("from").value,
-        to_currency: document.getElementById("to").value,
-        lang: currentLang
-      });
-    }
-  });
+  document.getElementById("transferBtn").addEventListener("click", function() {
+
+  // 原有 GA 统计
+  if (typeof gtag === "function") {
+    gtag('event','transfer_interest', {
+      from_currency: document.getElementById("from").value,
+      to_currency: document.getElementById("to").value,
+      lang: currentLang
+    });
+  }
+
+  // 新增：跳转到比较页
+  window.location.href = "/transfer.html";
+});
 
   // PWA
   if ('serviceWorker' in navigator) {
