@@ -6,6 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Currency Converter</title>
+<meta name="description" content="Free USD to KHR exchange rate calculator for Cambodia. Compare rates before exchanging money.">
 
 <!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
@@ -33,6 +34,10 @@
     --btnText:#FFFFFF;
     --chip:#EEF2FF;
     --chipText:#1E3A8A;
+    --successBg:#ECFDF3;
+    --successText:#027A48;
+    --warnBg:#FFF7ED;
+    --warnText:#B54708;
   }
 
   *{ box-sizing:border-box; }
@@ -244,19 +249,84 @@
     line-height:1.45;
   }
 
-  .footer{
-    margin-top:16px;
-    text-align:center;
-    font-size:12px;
-    color:var(--muted);
+  /* 新增：汇率差价模块 */
+  .compareBox{
+    margin-top:14px;
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:16px;
+    padding:14px;
+    background:#fff;
   }
-  .footer a{
-    color:var(--muted);
-    text-decoration:none;
-  }
-  .footer a:hover{ text-decoration:underline; }
 
-  /* ====== ✅ 新增：转账兴趣测试区域样式（不影响原样式） ====== */
+  .compareTitle{
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:10px;
+  }
+
+  .compareGrid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:10px;
+    align-items:end;
+  }
+
+  .compareMini{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px;
+    background:#FBFCFF;
+  }
+
+  .compareMini span{
+    display:block;
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:5px;
+  }
+
+  .compareMini strong{
+    display:block;
+    font-size:14px;
+    color:#111827;
+    word-break:break-word;
+  }
+
+  .lossRow{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+
+  .lossBox, .saveBox{
+    border-radius:14px;
+    padding:10px 12px;
+  }
+
+  .lossBox{
+    background:var(--warnBg);
+    color:var(--warnText);
+  }
+
+  .saveBox{
+    background:var(--successBg);
+    color:var(--successText);
+  }
+
+  .lossBox span, .saveBox span{
+    display:block;
+    font-size:11px;
+    opacity:.9;
+    margin-bottom:4px;
+  }
+
+  .lossBox strong, .saveBox strong{
+    display:block;
+    font-size:15px;
+  }
+
+  /* 新增：转账兴趣测试区域 */
   .transferTest{
     margin-top:14px;
     border:1px solid rgba(229,231,235,.9);
@@ -280,6 +350,28 @@
     cursor:pointer;
   }
   .transferBtn:hover{ background: var(--primary2); }
+
+  .footer{
+    margin-top:16px;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+  }
+  .footer a{
+    color:var(--muted);
+    text-decoration:none;
+  }
+  .footer a:hover{ text-decoration:underline; }
+
+  @media (max-width: 640px){
+    .compareGrid,
+    .lossRow{
+      grid-template-columns:1fr;
+    }
+    .result{
+      font-size:26px;
+    }
+  }
 </style>
 </head>
 
@@ -289,7 +381,6 @@
   <div class="topbar">
     <div class="brand">
       <div class="logo" aria-hidden="true">
-        <!-- currency icon (svg) -->
         <svg viewBox="0 0 24 24" width="20" height="20" fill="white" aria-hidden="true">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
                    10-4.48 10-10S17.52 2 12 2zm1 17.93V20h-2v-.07
@@ -342,7 +433,53 @@
       </div>
     </div>
 
-    <!-- ====== ✅ 新增：转账兴趣测试（只统计，不跳转） ====== -->
+    <!-- 新增：汇率差价 / 损失估算 -->
+    <div class="compareBox" id="compareBox">
+      <div class="compareTitle" id="compareTitle">Compare with an offered cash-exchange rate</div>
+
+      <div class="compareGrid">
+        <div>
+          <label id="lblReferenceRate">Reference rate</label>
+          <div class="compareMini">
+            <span id="referenceRateLabel">Current reference</span>
+            <strong id="referenceRateValue">—</strong>
+          </div>
+        </div>
+
+        <div>
+          <label id="lblOfferedRate">Local offered rate</label>
+          <input id="offeredRate" type="number" inputmode="decimal" step="0.0001" placeholder="Enter offered rate">
+        </div>
+      </div>
+
+      <div class="lossRow">
+        <div class="compareMini">
+          <span id="lblYouReceiveRef">At reference rate</span>
+          <strong id="youReceiveRef">—</strong>
+        </div>
+        <div class="compareMini">
+          <span id="lblYouReceiveOffered">At offered rate</span>
+          <strong id="youReceiveOffered">—</strong>
+        </div>
+      </div>
+
+      <div class="lossRow">
+        <div class="lossBox">
+          <span id="lblEstimatedLoss">Estimated difference</span>
+          <strong id="estimatedLoss">—</strong>
+        </div>
+        <div class="saveBox">
+          <span id="lblBetterRate">Potential extra value at reference rate</span>
+          <strong id="betterRateValue">—</strong>
+        </div>
+      </div>
+
+      <div class="sub" id="compareSub">
+        Editable estimate for comparison only. You can replace the offered rate with the actual shop / bank rate you receive.
+      </div>
+    </div>
+
+    <!-- 转账兴趣测试 -->
     <div class="transferTest" id="transferTest">
       <div class="transferText" id="transferText">Need to send money abroad?</div>
       <button class="transferBtn" id="transferBtn" type="button">Compare transfer fees</button>
@@ -391,10 +528,21 @@
       linkPrivacy: "Privacy",
       linkTerms: "Terms",
       linkDisclaimer: "Disclaimer",
-      /* ✅ 新增：转账文案 */
       transferText: "Need to send money abroad?",
-      transferBtn: "Compare transfer fees"
+      transferBtn: "Compare transfer fees",
+
+      compareTitle: "Compare with an offered cash-exchange rate",
+      lblReferenceRate: "Reference rate",
+      referenceRateLabel: "Current reference",
+      lblOfferedRate: "Local offered rate",
+      offeredRatePlaceholder: "Enter offered rate",
+      lblYouReceiveRef: "At reference rate",
+      lblYouReceiveOffered: "At offered rate",
+      lblEstimatedLoss: "Estimated difference",
+      lblBetterRate: "Potential extra value at reference rate",
+      compareSub: "Editable estimate for comparison only. You can replace the offered rate with the actual shop / bank rate you receive."
     },
+
     km: {
       title: "កម្មវិធីបម្លែងប្រាក់",
       hint: "បម្លែងមុនពេលអ្នកប្តូរប្រាក់។",
@@ -412,10 +560,21 @@
       linkPrivacy: "Privacy",
       linkTerms: "Terms",
       linkDisclaimer: "Disclaimer",
-      /* ✅ 新增：转账文案 */
       transferText: "ត្រូវការផ្ញើប្រាក់ទៅក្រៅប្រទេសទេ?",
-      transferBtn: "ប្រៀបធៀបថ្លៃផ្ទេរប្រាក់"
+      transferBtn: "ប្រៀបធៀបថ្លៃផ្ទេរប្រាក់",
+
+      compareTitle: "ប្រៀបធៀបជាមួយអត្រាប្តូរប្រាក់ដែលគេផ្តល់ជូន",
+      lblReferenceRate: "អត្រាយោង",
+      referenceRateLabel: "អត្រាយោងបច្ចុប្បន្ន",
+      lblOfferedRate: "អត្រាដែលហាងផ្តល់",
+      offeredRatePlaceholder: "បញ្ចូលអត្រា",
+      lblYouReceiveRef: "តាមអត្រាយោង",
+      lblYouReceiveOffered: "តាមអត្រាដែលគេផ្តល់",
+      lblEstimatedLoss: "ភាពខុសគ្នាប៉ាន់ស្មាន",
+      lblBetterRate: "តម្លៃបន្ថែមប្រសិនបើប្រើអត្រាយោង",
+      compareSub: "សម្រាប់ប៉ាន់ស្មានប៉ុណ្ណោះ។ អ្នកអាចកែអត្រានេះទៅតាមអត្រាពិតពីហាង ឬធនាគារ។"
     },
+
     zh: {
       title: "汇率换算工具",
       hint: "换钱前先算一下。",
@@ -433,9 +592,19 @@
       linkPrivacy: "隐私政策",
       linkTerms: "使用条款",
       linkDisclaimer: "免责声明",
-      /* ✅ 新增：转账文案 */
       transferText: "需要跨境转账/汇款吗？",
-      transferBtn: "比较转账手续费"
+      transferBtn: "比较转账手续费",
+
+      compareTitle: "对比你拿到的换汇报价",
+      lblReferenceRate: "参考汇率",
+      referenceRateLabel: "当前参考价",
+      lblOfferedRate: "本地换汇报价",
+      offeredRatePlaceholder: "请输入报价汇率",
+      lblYouReceiveRef: "按参考汇率可拿到",
+      lblYouReceiveOffered: "按报价汇率可拿到",
+      lblEstimatedLoss: "预估差额",
+      lblBetterRate: "按参考汇率可多拿",
+      compareSub: "仅供估算对比。你可以把这里改成你实际拿到的换汇店/银行报价。"
     }
   };
 
@@ -466,17 +635,27 @@
     document.getElementById("amount").placeholder = i18n[currentLang].enter;
     document.getElementById("copy").innerText = i18n[currentLang].copy;
     document.getElementById("subText").innerText = i18n[currentLang].sub;
-    const btn = document.getElementById("transferBtn");
-    if (btn) btn.innerText = i18n[currentLang].transferBtn;
     document.getElementById("linkPrivacy").innerText = i18n[currentLang].linkPrivacy;
     document.getElementById("linkTerms").innerText = i18n[currentLang].linkTerms;
     document.getElementById("linkDisclaimer").innerText = i18n[currentLang].linkDisclaimer;
 
-    /* ✅ 新增：同步转账按钮文案（不影响原逻辑） */
+    // 转账按钮文案
     const tt = document.getElementById("transferText");
     const tb = document.getElementById("transferBtn");
     if (tt) tt.innerText = i18n[currentLang].transferText;
     if (tb) tb.innerText = i18n[currentLang].transferBtn;
+
+    // 新增模块文案
+    document.getElementById("compareTitle").innerText = i18n[currentLang].compareTitle;
+    document.getElementById("lblReferenceRate").innerText = i18n[currentLang].lblReferenceRate;
+    document.getElementById("referenceRateLabel").innerText = i18n[currentLang].referenceRateLabel;
+    document.getElementById("lblOfferedRate").innerText = i18n[currentLang].lblOfferedRate;
+    document.getElementById("offeredRate").placeholder = i18n[currentLang].offeredRatePlaceholder;
+    document.getElementById("lblYouReceiveRef").innerText = i18n[currentLang].lblYouReceiveRef;
+    document.getElementById("lblYouReceiveOffered").innerText = i18n[currentLang].lblYouReceiveOffered;
+    document.getElementById("lblEstimatedLoss").innerText = i18n[currentLang].lblEstimatedLoss;
+    document.getElementById("lblBetterRate").innerText = i18n[currentLang].lblBetterRate;
+    document.getElementById("compareSub").innerText = i18n[currentLang].compareSub;
 
     // rebuild currency dropdown labels (keep selection)
     const fromVal = document.getElementById("from").value || "USD";
@@ -588,6 +767,98 @@
     return `${left} ≈ ${right}`;
   }
 
+  // 新增：根据当前主汇率自动给一个默认“本地报价”
+  function getSuggestedOfferedRate(from, to) {
+    const ref = getRate(from, to);
+    if (ref == null) return null;
+
+    // 按方向给一个默认差价，只用于用户快速测试，可手动改
+    let spread = 0;
+
+    if (to === "KHR") {
+      spread = 40; // 例：比参考价少 40 KHR
+      return Math.max(ref - spread, 0);
+    }
+
+    if (to === "USD") {
+      spread = 0.01;
+      return Math.max(ref - spread, 0);
+    }
+
+    if (to === "CNY") {
+      spread = 0.05;
+      return Math.max(ref - spread, 0);
+    }
+
+    return ref;
+  }
+
+  function updateComparisonBox() {
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+    const offeredRateInput = document.getElementById("offeredRate");
+
+    const refRate = getRate(from, to);
+
+    if (refRate == null || isNaN(amount)) {
+      document.getElementById("referenceRateValue").innerText = "—";
+      document.getElementById("youReceiveRef").innerText = "—";
+      document.getElementById("youReceiveOffered").innerText = "—";
+      document.getElementById("estimatedLoss").innerText = "—";
+      document.getElementById("betterRateValue").innerText = "—";
+      return;
+    }
+
+    // 如果用户没有填过，自动带一个默认值
+    if (!offeredRateInput.dataset.userEdited && (!offeredRateInput.value || Number(offeredRateInput.value) <= 0)) {
+      const suggested = getSuggestedOfferedRate(from, to);
+      if (suggested != null) {
+        offeredRateInput.value = to === "KHR" ? Math.round(suggested) : suggested.toFixed(4);
+      }
+    }
+
+    const offeredRate = parseFloat(offeredRateInput.value);
+
+    const refDec = to === "KHR" ? 0 : 4;
+    const receiveDec = to === "KHR" ? 0 : 2;
+    const diffDec = to === "KHR" ? 0 : 2;
+
+    document.getElementById("referenceRateValue").innerText =
+      `1 ${currencyShort(from)} = ${formatNumber(refRate, refDec)} ${currencyShort(to)}`;
+
+    const receiveRef = amount * refRate;
+    document.getElementById("youReceiveRef").innerText =
+      `${formatNumber(receiveRef, receiveDec)} ${currencyShort(to)}`;
+
+    if (!isNaN(offeredRate) && offeredRate > 0) {
+      const receiveOffered = amount * offeredRate;
+      const diff = receiveRef - receiveOffered;
+
+      document.getElementById("youReceiveOffered").innerText =
+        `${formatNumber(receiveOffered, receiveDec)} ${currencyShort(to)}`;
+
+      if (diff >= 0) {
+        document.getElementById("estimatedLoss").innerText =
+          `${formatNumber(diff, diffDec)} ${currencyShort(to)}`;
+
+        document.getElementById("betterRateValue").innerText =
+          `${formatNumber(diff, diffDec)} ${currencyShort(to)}`;
+      } else {
+        // 如果用户填了比参考价更好的报价
+        document.getElementById("estimatedLoss").innerText =
+          `${formatNumber(Math.abs(diff), diffDec)} ${currencyShort(to)}`;
+
+        document.getElementById("betterRateValue").innerText =
+          `${formatNumber(Math.abs(diff), diffDec)} ${currencyShort(to)}`;
+      }
+    } else {
+      document.getElementById("youReceiveOffered").innerText = "—";
+      document.getElementById("estimatedLoss").innerText = "—";
+      document.getElementById("betterRateValue").innerText = "—";
+    }
+  }
+
   function calculate(track=true, source="input") {
     const metaEl = document.getElementById("meta");
     const resultEl = document.getElementById("result");
@@ -600,12 +871,14 @@
       resultEl.innerText = i18n[currentLang].loading;
       metaEl.innerText = i18n[currentLang].loading;
       setCopyEnabled(false);
+      updateComparisonBox();
       return;
     }
 
     if (isNaN(amount)) {
       resultEl.innerText = "—";
       setCopyEnabled(false);
+      updateComparisonBox();
       return;
     }
 
@@ -613,6 +886,8 @@
     lastRateText = text;
     resultEl.innerText = text || "—";
     setCopyEnabled(!!text);
+
+    updateComparisonBox();
 
     if (track && typeof gtag === "function") {
       gtag('event', 'calculate', {
@@ -705,6 +980,10 @@
       toEl.value = (fromEl.value === "USD") ? "KHR" : "USD";
     }
 
+    // 交换后，重置默认报价（除非用户自己改过）
+    const offeredRate = document.getElementById("offeredRate");
+    offeredRate.dataset.userEdited = "";
+
     renderQuickButtons();
     setDefaultAmountByFrom();
     calculate(true, "swap_pair");
@@ -717,6 +996,7 @@
     if (document.getElementById("from").value === document.getElementById("to").value) {
       document.getElementById("to").value = (document.getElementById("from").value === "USD") ? "KHR" : "USD";
     }
+    document.getElementById("offeredRate").dataset.userEdited = "";
     renderQuickButtons();
     setDefaultAmountByFrom();
     calculate(true, "change_from");
@@ -726,27 +1006,30 @@
     if (document.getElementById("from").value === document.getElementById("to").value) {
       document.getElementById("from").value = (document.getElementById("to").value === "USD") ? "KHR" : "USD";
     }
+    document.getElementById("offeredRate").dataset.userEdited = "";
     renderQuickButtons();
     calculate(true, "change_to");
+  });
+
+  document.getElementById("offeredRate").addEventListener("input", () => {
+    document.getElementById("offeredRate").dataset.userEdited = "1";
+    updateComparisonBox();
   });
 
   document.getElementById("swap").addEventListener("click", swapFromTo);
   document.getElementById("copy").addEventListener("click", copyResult);
 
-  document.getElementById("transferBtn").addEventListener("click", function() {
-
-  // 原有 GA 统计
-  if (typeof gtag === "function") {
-    gtag('event','transfer_interest', {
-      from_currency: document.getElementById("from").value,
-      to_currency: document.getElementById("to").value,
-      lang: currentLang
-    });
-  }
-
-  // 新增：跳转到比较页
-  window.location.href = "/transfer.html";
-});
+  // 转账兴趣按钮：保留统计 + 跳转
+  document.getElementById("transferBtn").addEventListener("click", () => {
+    if (typeof gtag === "function") {
+      gtag('event', 'transfer_interest', {
+        from_currency: document.getElementById("from").value,
+        to_currency: document.getElementById("to").value,
+        lang: currentLang
+      });
+    }
+    window.location.href = "/transfer.html";
+  });
 
   // PWA
   if ('serviceWorker' in navigator) {
@@ -758,7 +1041,6 @@
   setDefaultAmountByFrom();
   renderQuickButtons();
 
-  // language: saved > browser-detect > en
   let initialLang = "en";
   try {
     const saved = localStorage.getItem("lang_pref");
