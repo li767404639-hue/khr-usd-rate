@@ -3,273 +3,277 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>USD to Cambodia Transfer Comparison</title>
-<meta name="theme-color" content="#0B1F4A">
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-3BT4GY2B36');
-</script>
+<title>Compare Money Transfer Services</title>
 
 <style>
-:root{
---primary:#0B1F4A;
---green:#047857;
---border:#E5E7EB;
---muted:#6B7280;
---bg:#F3F6FB;
-}
+
 body{
+font-family:system-ui,Arial;
+background:#F3F6FB;
 margin:0;
-font-family:system-ui,-apple-system,Segoe UI,Roboto;
-background:var(--bg);
-color:#111827;
+padding:20px;
 }
+
 .container{
-max-width:1100px;
-margin:30px auto;
-padding:0 16px;
+max-width:750px;
+margin:auto;
 }
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-}
-.logo{font-weight:700;font-size:18px;}
-.lang span{
-cursor:pointer;
-margin-left:10px;
-font-size:13px;
-color:var(--muted);
-}
-.lang .active{color:var(--primary);font-weight:600;}
 
 .card{
-background:white;
-border:1px solid var(--border);
-border-radius:14px;
-padding:20px;
+background:#fff;
+border-radius:16px;
+padding:18px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
 margin-bottom:20px;
 }
 
-h1{margin:0 0 8px;font-size:24px;}
-.sub{color:var(--muted);font-size:14px;}
-
-.notice{
-background:#F9FAFB;
-border:1px solid var(--border);
-padding:14px;
-border-radius:10px;
-font-size:13px;
-margin-top:15px;
+h1{
+font-size:20px;
+margin-bottom:10px;
 }
 
-input{
-padding:10px;
-border:1px solid var(--border);
-border-radius:8px;
-font-size:14px;
-width:150px;
+.sub{
+color:#666;
+font-size:13px;
+margin-bottom:15px;
 }
 
 .table{
 width:100%;
 border-collapse:collapse;
-margin-top:20px;
-}
-.table th,.table td{
-padding:14px 10px;
-border-bottom:1px solid var(--border);
-font-size:14px;
-}
-.table th{
-background:#F3F4F6;
 }
 
-.best{
-background:#ECFDF5;
-}
-.bestTag{
-color:var(--green);
-font-weight:600;
+.table th{
 font-size:12px;
+text-align:left;
+color:#777;
+padding:10px 0;
+border-bottom:1px solid #eee;
+}
+
+.table td{
+padding:14px 0;
+border-bottom:1px solid #eee;
+font-size:14px;
 }
 
 .btn{
-background:var(--primary);
-color:white;
-padding:9px 14px;
-border-radius:8px;
+background:#0B1F4A;
+color:#fff;
+padding:10px 16px;
+border-radius:10px;
 text-decoration:none;
 font-size:13px;
 display:inline-block;
 }
+
+.best{
+color:#0A7B34;
+font-weight:600;
+font-size:12px;
+}
+
 .footer{
 text-align:center;
 font-size:12px;
-color:var(--muted);
-margin-top:30px;
+color:#888;
+margin-top:20px;
 }
+
+.lang{
+margin-bottom:10px;
+}
+
+.lang span{
+margin-right:8px;
+cursor:pointer;
+font-size:12px;
+}
+
 </style>
+
 </head>
 
 <body>
+
 <div class="container">
 
-<div class="header">
-<div class="logo" id="brand"></div>
 <div class="lang">
-<span id="btnEN" onclick="setLang('en')">EN</span>
-<span id="btnKM" onclick="setLang('km')">ខ្មែរ</span>
-<span id="btnZH" onclick="setLang('zh')">中文</span>
-</div>
-</div>
-
-<div class="card">
-<h1 id="title"></h1>
-<div class="sub" id="subtitle"></div>
-
-<div style="margin-top:15px;">
-<label id="amountLabel"></label>
-<input type="number" id="amount" value="1000" oninput="calculate()">
-USD
-</div>
-
-<div class="notice" id="notice"></div>
+<span onclick="setLang('en')">EN</span>
+<span onclick="setLang('km')">ខ្មែរ</span>
+<span onclick="setLang('zh')">中文</span>
 </div>
 
 <div class="card">
+
+<h1 id="title">Compare transfer services</h1>
+
+<div class="sub" id="subtitle">
+Choose a provider to check fees and send money securely.
+</div>
+
+<div id="amountInfo" style="font-size:13px;margin-bottom:12px;color:#444"></div>
+
 <table class="table">
-<thead>
+
 <tr>
-<th id="colProvider"></th>
-<th id="colFee"></th>
-<th id="colRate"></th>
-<th id="colReceive"></th>
+<th id="providerLabel">Provider</th>
+<th id="speedLabel">Speed</th>
+<th id="feesLabel">Fees</th>
 <th></th>
 </tr>
-</thead>
-<tbody id="tbody"></tbody>
+
+<tr>
+
+<td>
+<strong>Provider A</strong><br>
+<span class="best" id="bestTag">Recommended</span>
+</td>
+
+<td id="speed1">Minutes</td>
+
+<td id="fee1">Low</td>
+
+<td>
+<a href="#" class="btn" onclick="goProvider('A','Provider A')">Visit</a>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+<strong>Provider B</strong>
+</td>
+
+<td id="speed2">Minutes</td>
+
+<td id="fee2">Medium</td>
+
+<td>
+<a href="#" class="btn" onclick="goProvider('B','Provider B')">Visit</a>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+<strong>Provider C</strong>
+</td>
+
+<td id="speed3">1-2 days</td>
+
+<td id="fee3">Low</td>
+
+<td>
+<a href="#" class="btn" onclick="goProvider('C','Provider C')">Visit</a>
+</td>
+
+</tr>
+
 </table>
+
 </div>
 
-<div class="footer">
-Privacy · Terms · Disclaimer
+<div class="footer" id="footer">
+This page compares international money transfer services.
 </div>
 
 </div>
 
 <script>
 
-let currentLang="en";
-
-const providers=[
-{name:"A",fee:5,rate:4010},
-{name:"B",fee:8,rate:4020},
-{name:"C",fee:3,rate:3995}
-];
-
-function calculate(){
-const amt=parseFloat(document.getElementById("amount").value)||0;
-const tbody=document.getElementById("tbody");
-tbody.innerHTML="";
-let bestReceive=0;
-providers.forEach(p=>{
-const receive=(amt-p.fee)*p.rate;
-if(receive>bestReceive) bestReceive=receive;
-});
-providers.forEach(p=>{
-const receive=(amt-p.fee)*p.rate;
-const tr=document.createElement("tr");
-if(receive===bestReceive) tr.classList.add("best");
-tr.innerHTML=`
-<td>${p.name} ${receive===bestReceive?'<span class="bestTag">Best</span>':''}</td>
-<td>$${p.fee}</td>
-<td>${p.rate}</td>
-<td>${Math.round(receive).toLocaleString()} KHR</td>
-<td><a href="#" class="btn" onclick="trackProvider('${p.name}')">${i18n[currentLang].visit}</a></td>
-`;
-tbody.appendChild(tr);
-});
+const AFFILIATE_LINKS={
+A:"#",
+B:"#",
+C:"#"
 }
 
-function trackProvider(name){
+function goProvider(code,name){
+
 if(typeof gtag==="function"){
-gtag("event","provider_click",{provider:name});
-}
+gtag("event","provider_click",{
+provider:name
+})
 }
 
-const i18n={
-en:{
-brand:"Transfer Comparison",
-title:"Compare USD to Cambodia Transfers",
-subtitle:"Estimate final received amount after fees and rate.",
-amountLabel:"Send amount:",
-notice:"Independent comparison only. We are not a financial institution.",
-provider:"Provider",
-fee:"Fee",
-rate:"Exchange Rate",
-receive:"You Receive",
-visit:"Visit"
-},
-zh:{
-brand:"转账对比",
-title:"美元转柬埔寨对比",
-subtitle:"估算扣除手续费后的实际到账金额。",
-amountLabel:"汇出金额：",
-notice:"本页面为独立信息对比，并非金融机构。",
-provider:"平台",
-fee:"手续费",
-rate:"汇率",
-receive:"到账金额",
-visit:"访问"
-},
-km:{
-brand:"ការប្រៀបធៀបការផ្ទេរប្រាក់",
-title:"ប្រៀបធៀប USD ទៅកម្ពុជា",
-subtitle:"គណនាចំនួនប្រាក់ដែលទទួលបានបន្ទាប់ពីថ្លៃសេវា។",
-amountLabel:"ចំនួនផ្ញើ៖",
-notice:"ទំព័រនេះសម្រាប់ប្រៀបធៀបព័ត៌មានប៉ុណ្ណោះ។",
-provider:"អ្នកផ្តល់សេវា",
-fee:"ថ្លៃ",
-rate:"អត្រា",
-receive:"ទទួលបាន",
-visit:"ចូលមើល"
+setTimeout(()=>{
+window.location.href=AFFILIATE_LINKS[code]
+},150)
+
 }
-};
+
+const TEXT={
+
+en:{
+title:"Compare transfer services",
+subtitle:"Choose a provider to check fees and send money securely.",
+provider:"Provider",
+speed:"Speed",
+fees:"Fees",
+recommended:"Recommended",
+footer:"This page compares international money transfer services."
+},
+
+km:{
+title:"ប្រៀបធៀបសេវាផ្ទេរប្រាក់",
+subtitle:"ជ្រើសរើសសេវាកម្មដើម្បីពិនិត្យថ្លៃសេវា និងផ្ញើប្រាក់ដោយសុវត្ថិភាព",
+provider:"ក្រុមហ៊ុន",
+speed:"ល្បឿន",
+fees:"ថ្លៃសេវា",
+recommended:"ណែនាំ",
+footer:"ទំព័រនេះប្រៀបធៀបសេវាផ្ទេរប្រាក់អន្តរជាតិ"
+},
+
+zh:{
+title:"比较转账服务",
+subtitle:"选择服务商查看手续费并安全汇款",
+provider:"服务商",
+speed:"到账速度",
+fees:"手续费",
+recommended:"推荐",
+footer:"本页面用于比较国际转账服务"
+}
+
+}
 
 function setLang(lang){
-currentLang=lang;
-localStorage.setItem("lang_pref",lang);
-document.querySelectorAll(".lang span").forEach(e=>e.classList.remove("active"));
-document.getElementById("btn"+lang.toUpperCase()).classList.add("active");
-const t=i18n[lang];
-document.getElementById("brand").innerText=t.brand;
-document.getElementById("title").innerText=t.title;
-document.getElementById("subtitle").innerText=t.subtitle;
-document.getElementById("amountLabel").innerText=t.amountLabel;
-document.getElementById("notice").innerText=t.notice;
-document.getElementById("colProvider").innerText=t.provider;
-document.getElementById("colFee").innerText=t.fee;
-document.getElementById("colRate").innerText=t.rate;
-document.getElementById("colReceive").innerText=t.receive;
-calculate();
+
+document.getElementById("title").innerText=TEXT[lang].title
+document.getElementById("subtitle").innerText=TEXT[lang].subtitle
+document.getElementById("providerLabel").innerText=TEXT[lang].provider
+document.getElementById("speedLabel").innerText=TEXT[lang].speed
+document.getElementById("feesLabel").innerText=TEXT[lang].fees
+document.getElementById("bestTag").innerText=TEXT[lang].recommended
+document.getElementById("footer").innerText=TEXT[lang].footer
+
 }
 
-(function init(){
-let saved=localStorage.getItem("lang_pref");
-if(saved&&i18n[saved]) setLang(saved);
-else{
-const l=navigator.language;
-if(l.startsWith("zh")) setLang("zh");
-else if(l.startsWith("km")) setLang("km");
-else setLang("en");
+setLang("en")
+
+/* 自动接收金额 */
+
+function readParams(){
+
+const url=new URL(window.location.href)
+
+const amount=url.searchParams.get("amount")
+const from=url.searchParams.get("from")
+const to=url.searchParams.get("to")
+
+if(amount){
+
+document.getElementById("amountInfo").innerText=
+amount+" "+from+" → "+to
+
 }
-})();
+
+}
+
+readParams()
+
 </script>
 
 </body>
