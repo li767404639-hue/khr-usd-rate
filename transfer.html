@@ -29,8 +29,6 @@ gtag('config', 'G-3BT4GY2B36');
   --chipText:#1E3A8A;
   --success:#047857;
   --successBg:#ECFDF3;
-  --warn:#B54708;
-  --warnBg:#FFF7ED;
 }
 
 *{box-sizing:border-box;}
@@ -432,61 +430,60 @@ const AFFILIATE_LINKS = {
   C: "#"
 };
 
-// 模拟平台数据，后期可替换
 const PROVIDERS = [
   {
     code: "A",
-    feesUsd: 5,
-    fxMarkupPct: 0.0015,
+    feesUsd: 4,
+    fxMarkupPct: 0.0006,
     name: {
-      en: "Global Transfer Standard",
-      zh: "环球标准转账",
-      km: "សេវាផ្ទេរប្រាក់ស្តង់ដារ"
+      en: "Wise",
+      zh: "Wise 国际汇款",
+      km: "Wise ផ្ទេរប្រាក់អន្តរជាតិ"
     },
     desc: {
-      en: "Balanced fees and payout for most users",
-      zh: "手续费与到账金额较均衡，适合多数用户",
-      km: "តុល្យភាពល្អរវាងថ្លៃសេវា និងចំនួនទទួលបាន"
+      en: "Low fees and strong exchange rates. Popular for international transfers.",
+      zh: "手续费低，汇率接近市场价，适合国际汇款。",
+      km: "ថ្លៃសេវាទាប និងអត្រាប្តូរប្រាក់ល្អ សម្រាប់ផ្ទេរប្រាក់អន្តរជាតិ។"
     },
     speed: {
-      en: "Minutes",
-      zh: "分钟级",
-      km: "ប៉ុន្មាននាទី"
+      en: "Minutes – Same day",
+      zh: "几分钟到当天",
+      km: "ប៉ុន្មាននាទី ដល់ ក្នុងថ្ងៃ"
     }
   },
   {
     code: "B",
-    feesUsd: 8,
-    fxMarkupPct: 0.0008,
+    feesUsd: 7,
+    fxMarkupPct: 0.0018,
     name: {
-      en: "Priority Remit Express",
-      zh: "优先极速汇款",
-      km: "សេវាផ្ទេរប្រាក់លឿន"
+      en: "Remitly",
+      zh: "Remitly 汇款",
+      km: "Remitly ផ្ទេរប្រាក់"
     },
     desc: {
-      en: "Often stronger rate, slightly higher fee",
-      zh: "汇率通常更优，但手续费稍高",
-      km: "អត្រាប្តូរប្រាក់ប្រសើរជាង ប៉ុន្តែថ្លៃខ្ពស់ជាងបន្តិច"
+      en: "Fast transfers to many countries with multiple payout options.",
+      zh: "支持多国家汇款，到账速度快。",
+      km: "ផ្ទេរប្រាក់ទៅប្រទេសជាច្រើន និងមានជម្រើសទទួលប្រាក់ច្រើន។"
     },
     speed: {
       en: "Same day",
-      zh: "当天",
+      zh: "当天到账",
       km: "ក្នុងថ្ងៃតែមួយ"
     }
   },
   {
     code: "C",
-    feesUsd: 3,
-    fxMarkupPct: 0.003,
+    feesUsd: 5,
+    fxMarkupPct: 0.0025,
     name: {
-      en: "Value Transfer Basic",
-      zh: "基础省钱转账",
-      km: "សេវាផ្ទេរប្រាក់សន្សំសំចៃ"
+      en: "XE Money Transfer",
+      zh: "XE 国际汇款",
+      km: "XE ផ្ទេរប្រាក់"
     },
     desc: {
-      en: "Low fee option for cost-focused users",
-      zh: "低手续费方案，适合更重视成本的用户",
-      km: "ជម្រើសថ្លៃទាប សមស្របសម្រាប់អ្នកផ្តោតលើចំណាយ"
+      en: "Trusted global currency provider with international transfer service.",
+      zh: "全球汇率品牌，提供国际转账服务。",
+      km: "ម៉ាកអត្រាប្តូរប្រាក់សកល ដែលមានសេវាផ្ទេរប្រាក់។"
     },
     speed: {
       en: "1–2 days",
@@ -662,7 +659,7 @@ function renderTable(){
     const tr = document.createElement("tr");
     if (r.code === best.code) tr.className = "bestRow";
 
-    const rowHtml = `
+    tr.innerHTML = `
       <td>
         <div class="providerName">
           ${r.name[currentLang]}
@@ -688,8 +685,6 @@ function renderTable(){
         <a href="javascript:void(0)" class="btn" onclick="goProvider('${r.code}','${r.name.en}')">${t.visit}</a>
       </td>
     `;
-
-    tr.innerHTML = rowHtml;
     tbody.appendChild(tr);
   });
 }
