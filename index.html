@@ -41,6 +41,7 @@
   }
 
   *{ box-sizing:border-box; }
+
   body{
     margin:0;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -63,8 +64,10 @@
   }
 
   .brand{
-    display:flex; gap:10px; align-items:center;
-    min-width: 0;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    min-width:0;
   }
 
   .logo{
@@ -76,16 +79,16 @@
     align-items:center;
     justify-content:center;
     box-shadow:0 8px 20px rgba(11,31,74,.25);
-    flex: 0 0 auto;
+    flex:0 0 auto;
   }
 
   .brand h1{
     font-size:16px;
     margin:0;
     letter-spacing:.2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
   .lang{
@@ -94,8 +97,9 @@
     display:flex;
     gap:8px;
     align-items:center;
-    flex: 0 0 auto;
+    flex:0 0 auto;
   }
+
   .lang span{
     cursor:pointer;
     padding:6px 10px;
@@ -104,6 +108,7 @@
     background:#fff;
     color:var(--muted);
   }
+
   .lang span.active{
     border-color: rgba(11,31,74,.25);
     background: var(--chip);
@@ -115,7 +120,7 @@
     border:1px solid rgba(229,231,235,.9);
     border-radius:18px;
     padding:18px;
-    box-shadow: 0 14px 40px rgba(15,23,42,.06);
+    box-shadow:0 14px 40px rgba(15,23,42,.06);
   }
 
   .meta{
@@ -124,10 +129,11 @@
     line-height:1.4;
     margin-bottom:14px;
   }
+
   .meta.clickable{
     cursor:pointer;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration:underline;
+    text-underline-offset:2px;
   }
 
   .hint{
@@ -159,9 +165,10 @@
     outline:none;
     background:#fff;
   }
+
   select:focus, input:focus{
-    border-color: rgba(11,31,74,.35);
-    box-shadow: 0 0 0 4px rgba(11,31,74,.08);
+    border-color:rgba(11,31,74,.35);
+    box-shadow:0 0 0 4px rgba(11,31,74,.08);
   }
 
   .swapBtn{
@@ -173,7 +180,10 @@
     cursor:pointer;
     font-size:18px;
   }
-  .swapBtn:active{ transform: translateY(1px); }
+
+  .swapBtn:active{
+    transform: translateY(1px);
+  }
 
   .amountRow{
     margin-top:10px;
@@ -185,16 +195,20 @@
     flex-wrap:wrap;
     margin-top:10px;
   }
+
   .chip{
     padding:8px 10px;
     border-radius:999px;
     border:1px solid rgba(11,31,74,.16);
-    background: var(--chip);
-    color: var(--chipText);
+    background:var(--chip);
+    color:var(--chipText);
     font-size:13px;
     cursor:pointer;
   }
-  .chip:active{ transform: translateY(1px); }
+
+  .chip:active{
+    transform: translateY(1px);
+  }
 
   .resultBox{
     margin-top:14px;
@@ -230,13 +244,17 @@
     border:none;
     border-radius:14px;
     padding:12px 14px;
-    background: var(--primary);
-    color: var(--btnText);
+    background:var(--primary);
+    color:var(--btnText);
     font-size:14px;
     cursor:pointer;
     min-width:88px;
   }
-  .copyBtn:hover{ background: var(--primary2); }
+
+  .copyBtn:hover{
+    background:var(--primary2);
+  }
+
   .copyBtn:disabled{
     opacity:.55;
     cursor:not-allowed;
@@ -249,7 +267,6 @@
     line-height:1.45;
   }
 
-  /* 新增：汇率差价模块 */
   .compareBox{
     margin-top:14px;
     border:1px solid rgba(229,231,235,.9);
@@ -266,7 +283,7 @@
 
   .compareGrid{
     display:grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:1fr 1fr;
     gap:10px;
     align-items:end;
   }
@@ -326,7 +343,6 @@
     font-size:15px;
   }
 
-  /* 新增：转账兴趣测试区域 */
   .transferTest{
     margin-top:14px;
     border:1px solid rgba(229,231,235,.9);
@@ -334,22 +350,35 @@
     padding:14px 14px;
     background:#fff;
   }
+
   .transferText{
     font-size:13px;
     color:#111827;
-    margin-bottom:10px;
+    margin-bottom:6px;
+    font-weight:600;
   }
+
+  .transferHint{
+    font-size:12px;
+    color:#6B7280;
+    margin-bottom:10px;
+    line-height:1.45;
+  }
+
   .transferBtn{
     width:100%;
     border:none;
     border-radius:14px;
     padding:12px 14px;
-    background: var(--primary);
-    color: var(--btnText);
+    background:var(--primary);
+    color:var(--btnText);
     font-size:14px;
     cursor:pointer;
   }
-  .transferBtn:hover{ background: var(--primary2); }
+
+  .transferBtn:hover{
+    background:var(--primary2);
+  }
 
   .footer{
     margin-top:16px;
@@ -357,17 +386,22 @@
     font-size:12px;
     color:var(--muted);
   }
+
   .footer a{
     color:var(--muted);
     text-decoration:none;
   }
-  .footer a:hover{ text-decoration:underline; }
+
+  .footer a:hover{
+    text-decoration:underline;
+  }
 
   @media (max-width: 640px){
     .compareGrid,
     .lossRow{
       grid-template-columns:1fr;
     }
+
     .result{
       font-size:26px;
     }
@@ -433,7 +467,6 @@
       </div>
     </div>
 
-    <!-- 新增：汇率差价 / 损失估算 -->
     <div class="compareBox" id="compareBox">
       <div class="compareTitle" id="compareTitle">Compare with an offered cash-exchange rate</div>
 
@@ -479,22 +512,11 @@
       </div>
     </div>
 
-    <!-- 转账兴趣测试 -->
     <div class="transferTest" id="transferTest">
-
-    <div class="transferText" id="transferText">
-    Check transfer fees before sending money
+      <div class="transferText" id="transferText">Check transfer fees before sending money</div>
+      <div class="transferHint" id="transferHint">Different services may give very different exchange rates and fees</div>
+      <button class="transferBtn" id="transferBtn" type="button">Compare transfer fees</button>
     </div>
-
-    <div style="font-size:12px;color:#6B7280;margin-bottom:8px">
-    Different services may give very different exchange rates
-    </div>
-
-    <button class="transferBtn" id="transferBtn" type="button">
-    Compare transfer fees
-    </button>
-
-</div>
 
     <div class="footer">
       <a href="/privacy.html" id="linkPrivacy">Privacy</a> ·
@@ -506,17 +528,15 @@
 </div>
 
 <script>
-  // ---------- Quick amounts ----------
   const QUICK_AMOUNTS = {
     USD: [50, 75, 120],
     KHR: [50000, 100000, 200000],
     CNY: [100, 300, 500]
   };
 
-  // ---------- State ----------
   let currentLang = "en";
-  let usd_khr = null; // 1 USD = ? KHR
-  let usd_cny = null; // 1 USD = ? CNY
+  let usd_khr = null;
+  let usd_cny = null;
   let lastRateText = "";
 
   const currencyCodes = ["USD", "KHR", "CNY"];
@@ -539,7 +559,9 @@
       linkPrivacy: "Privacy",
       linkTerms: "Terms",
       linkDisclaimer: "Disclaimer",
-      transferText: "Need to send money abroad?",
+
+      transferText: "Check transfer fees before sending money",
+      transferHint: "Different services may give very different exchange rates and fees",
       transferBtn: "Compare transfer fees",
 
       compareTitle: "Compare with an offered cash-exchange rate",
@@ -571,7 +593,9 @@
       linkPrivacy: "Privacy",
       linkTerms: "Terms",
       linkDisclaimer: "Disclaimer",
-      transferText: "ត្រូវការផ្ញើប្រាក់ទៅក្រៅប្រទេសទេ?",
+
+      transferText: "ពិនិត្យថ្លៃផ្ទេរប្រាក់មុនពេលផ្ញើប្រាក់",
+      transferHint: "សេវាកម្មផ្សេងៗអាចផ្តល់អត្រាប្តូរប្រាក់ និងថ្លៃសេវាខុសគ្នាច្រើន",
       transferBtn: "ប្រៀបធៀបថ្លៃផ្ទេរប្រាក់",
 
       compareTitle: "ប្រៀបធៀបជាមួយអត្រាប្តូរប្រាក់ដែលគេផ្តល់ជូន",
@@ -603,7 +627,9 @@
       linkPrivacy: "隐私政策",
       linkTerms: "使用条款",
       linkDisclaimer: "免责声明",
-      transferText: "需要跨境转账/汇款吗？",
+
+      transferText: "转账前先比较手续费",
+      transferHint: "不同服务商给出的汇率和手续费可能差很多",
       transferBtn: "比较转账手续费",
 
       compareTitle: "对比你拿到的换汇报价",
@@ -650,13 +676,14 @@
     document.getElementById("linkTerms").innerText = i18n[currentLang].linkTerms;
     document.getElementById("linkDisclaimer").innerText = i18n[currentLang].linkDisclaimer;
 
-    // 转账按钮文案
     const tt = document.getElementById("transferText");
+    const th = document.getElementById("transferHint");
     const tb = document.getElementById("transferBtn");
+
     if (tt) tt.innerText = i18n[currentLang].transferText;
+    if (th) th.innerText = i18n[currentLang].transferHint;
     if (tb) tb.innerText = i18n[currentLang].transferBtn;
 
-    // 新增模块文案
     document.getElementById("compareTitle").innerText = i18n[currentLang].compareTitle;
     document.getElementById("lblReferenceRate").innerText = i18n[currentLang].lblReferenceRate;
     document.getElementById("referenceRateLabel").innerText = i18n[currentLang].referenceRateLabel;
@@ -668,7 +695,6 @@
     document.getElementById("lblBetterRate").innerText = i18n[currentLang].lblBetterRate;
     document.getElementById("compareSub").innerText = i18n[currentLang].compareSub;
 
-    // rebuild currency dropdown labels (keep selection)
     const fromVal = document.getElementById("from").value || "USD";
     const toVal = document.getElementById("to").value || "KHR";
     buildCurrencySelects(fromVal, toVal);
@@ -750,10 +776,8 @@
 
     if (from === "USD" && to === "KHR") return usd_khr;
     if (from === "USD" && to === "CNY") return usd_cny;
-
     if (from === "KHR" && to === "USD") return 1 / usd_khr;
     if (from === "CNY" && to === "USD") return 1 / usd_cny;
-
     if (from === "KHR" && to === "CNY") return (1 / usd_khr) * usd_cny;
     if (from === "CNY" && to === "KHR") return (1 / usd_cny) * usd_khr;
 
@@ -762,7 +786,10 @@
 
   function formatNumber(n, decimals) {
     if (typeof n !== "number" || !isFinite(n)) return "";
-    return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    return n.toLocaleString(undefined, {
+      maximumFractionDigits: decimals,
+      minimumFractionDigits: decimals
+    });
   }
 
   function getResultText(amount, from, to) {
@@ -778,16 +805,14 @@
     return `${left} ≈ ${right}`;
   }
 
-  // 新增：根据当前主汇率自动给一个默认“本地报价”
   function getSuggestedOfferedRate(from, to) {
     const ref = getRate(from, to);
     if (ref == null) return null;
 
-    // 按方向给一个默认差价，只用于用户快速测试，可手动改
     let spread = 0;
 
     if (to === "KHR") {
-      spread = 40; // 例：比参考价少 40 KHR
+      spread = 40;
       return Math.max(ref - spread, 0);
     }
 
@@ -809,7 +834,6 @@
     const to = document.getElementById("to").value;
     const amount = parseFloat(document.getElementById("amount").value);
     const offeredRateInput = document.getElementById("offeredRate");
-
     const refRate = getRate(from, to);
 
     if (refRate == null || isNaN(amount)) {
@@ -821,7 +845,6 @@
       return;
     }
 
-    // 如果用户没有填过，自动带一个默认值
     if (!offeredRateInput.dataset.userEdited && (!offeredRateInput.value || Number(offeredRateInput.value) <= 0)) {
       const suggested = getSuggestedOfferedRate(from, to);
       if (suggested != null) {
@@ -849,20 +872,11 @@
       document.getElementById("youReceiveOffered").innerText =
         `${formatNumber(receiveOffered, receiveDec)} ${currencyShort(to)}`;
 
-      if (diff >= 0) {
-        document.getElementById("estimatedLoss").innerText =
-          `${formatNumber(diff, diffDec)} ${currencyShort(to)}`;
+      document.getElementById("estimatedLoss").innerText =
+        `${formatNumber(Math.abs(diff), diffDec)} ${currencyShort(to)}`;
 
-        document.getElementById("betterRateValue").innerText =
-          `${formatNumber(diff, diffDec)} ${currencyShort(to)}`;
-      } else {
-        // 如果用户填了比参考价更好的报价
-        document.getElementById("estimatedLoss").innerText =
-          `${formatNumber(Math.abs(diff), diffDec)} ${currencyShort(to)}`;
-
-        document.getElementById("betterRateValue").innerText =
-          `${formatNumber(Math.abs(diff), diffDec)} ${currencyShort(to)}`;
-      }
+      document.getElementById("betterRateValue").innerText =
+        `${formatNumber(Math.abs(diff), diffDec)} ${currencyShort(to)}`;
     } else {
       document.getElementById("youReceiveOffered").innerText = "—";
       document.getElementById("estimatedLoss").innerText = "—";
@@ -946,7 +960,6 @@
     metaEl.innerText = i18n[currentLang].loading;
 
     try {
-      // USD->KHR
       const c1 = new AbortController();
       const t1 = setTimeout(() => c1.abort(), 10000);
       const r1 = await fetch('/api/rate?ts=' + Date.now(), { cache: "no-store", signal: c1.signal });
@@ -955,7 +968,6 @@
       const d1 = await r1.json();
       usd_khr = d1.usd_khr;
 
-      // USD->CNY (external)
       const c2 = new AbortController();
       const t2 = setTimeout(() => c2.abort(), 10000);
       const r2 = await fetch('https://open.er-api.com/v6/latest/USD', { cache: "no-store", signal: c2.signal });
@@ -991,16 +1003,12 @@
       toEl.value = (fromEl.value === "USD") ? "KHR" : "USD";
     }
 
-    // 交换后，重置默认报价（除非用户自己改过）
-    const offeredRate = document.getElementById("offeredRate");
-    offeredRate.dataset.userEdited = "";
-
+    document.getElementById("offeredRate").dataset.userEdited = "";
     renderQuickButtons();
     setDefaultAmountByFrom();
     calculate(true, "swap_pair");
   }
 
-  // ---------- Wire events ----------
   document.getElementById("amount").addEventListener("input", () => calculate(true, "input"));
 
   document.getElementById("from").addEventListener("change", () => {
@@ -1030,32 +1038,27 @@
   document.getElementById("swap").addEventListener("click", swapFromTo);
   document.getElementById("copy").addEventListener("click", copyResult);
 
-  // 转账兴趣按钮：保留统计 + 跳转
   document.getElementById("transferBtn").addEventListener("click", () => {
+    if (typeof gtag === "function") {
+      gtag('event', 'transfer_interest', {
+        from_currency: document.getElementById("from").value,
+        to_currency: document.getElementById("to").value,
+        lang: currentLang
+      });
+    }
 
-  if (typeof gtag === "function") {
-    gtag('event', 'transfer_interest', {
-      from_currency: document.getElementById("from").value,
-      to_currency: document.getElementById("to").value,
-      lang: currentLang
-    });
-  }
+    const amount = document.getElementById("amount").value || "";
+    const from = document.getElementById("from").value || "USD";
+    const to = document.getElementById("to").value || "KHR";
 
-  const amount = document.getElementById("amount").value || "";
-  const from = document.getElementById("from").value || "USD";
-  const to = document.getElementById("to").value || "KHR";
+    window.location.href =
+      `/transfer.html?amount=${encodeURIComponent(amount)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+  });
 
-  window.location.href =
-    `/transfer.html?amount=${encodeURIComponent(amount)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
-
-});
-
-  // PWA
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js');
   }
 
-  // ---------- INIT ----------
   buildCurrencySelects("USD", "KHR");
   setDefaultAmountByFrom();
   renderQuickButtons();
