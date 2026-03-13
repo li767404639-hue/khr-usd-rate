@@ -1021,18 +1021,23 @@
 
   // 转账兴趣按钮：保留统计 + 跳转
   document.getElementById("transferBtn").addEventListener("click", () => {
-    if (typeof gtag === "function") {
-      gtag('event', 'transfer_interest', {
-        from_currency: document.getElementById("from").value,
-        to_currency: document.getElementById("to").value,
-        lang: currentLang
-      });
-    }
-  const from = document.getElementById("from").value;
-  const to = document.getElementById("to").value;
+
+  if (typeof gtag === "function") {
+    gtag('event', 'transfer_interest', {
+      from_currency: document.getElementById("from").value,
+      to_currency: document.getElementById("to").value,
+      lang: currentLang
+    });
+  }
+
   const amount = document.getElementById("amount").value || "";
-  window.location.href = `/transfer.html?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&amount=${encodeURIComponent(amount)}`;
-  });
+  const from = document.getElementById("from").value || "USD";
+  const to = document.getElementById("to").value || "KHR";
+
+  window.location.href =
+    `/transfer.html?amount=${encodeURIComponent(amount)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+
+});
 
   // PWA
   if ('serviceWorker' in navigator) {
