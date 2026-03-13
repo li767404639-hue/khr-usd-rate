@@ -1028,7 +1028,10 @@
         lang: currentLang
       });
     }
-    window.location.href = "/transfer.html";
+  const from = document.getElementById("from").value;
+  const to = document.getElementById("to").value;
+  const amount = document.getElementById("amount").value || "";
+  window.location.href = `/transfer.html?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&amount=${encodeURIComponent(amount)}`;
   });
 
   // PWA
