@@ -1,776 +1,317 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Transfer Comparison</title>
-<meta name="theme-color" content="#0B1F4A">
-<meta name="description" content="Compare international transfer services, fees, exchange rates, and estimated payout values.">
 
-<!-- GA4 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compare Transfer Services</title>
+
+<meta name="theme-color" content="#0B1F4A">
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'G-3BT4GY2B36');
+gtag('config','G-3BT4GY2B36');
 </script>
 
 <style>
-:root{
-  --bg:#F3F6FB;
-  --card:#FFFFFF;
-  --text:#0F172A;
-  --muted:#6B7280;
-  --line:#E5E7EB;
-  --primary:#0B1F4A;
-  --primary2:#123A8A;
-  --chip:#EEF2FF;
-  --chipText:#1E3A8A;
-  --success:#047857;
-  --successBg:#ECFDF3;
-}
-
-*{box-sizing:border-box;}
 
 body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background: radial-gradient(1200px 600px at 20% 0%, #EAF0FF 0%, var(--bg) 45%, var(--bg) 100%);
-  color:var(--text);
+margin:0;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+background:#F3F6FB;
+color:#111827;
 }
 
 .container{
-  max-width:980px;
-  margin:28px auto;
-  padding:0 16px 30px;
+max-width:900px;
+margin:auto;
+padding:20px;
 }
 
 .topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:14px;
-  flex-wrap:wrap;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.logo{
-  width:40px;
-  height:40px;
-  border-radius:12px;
-  background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 8px 20px rgba(11,31,74,.25);
-}
-
-.brandText{
-  display:flex;
-  flex-direction:column;
-}
-
-.brandTitle{
-  font-size:17px;
-  font-weight:700;
-  line-height:1.2;
-}
-
-.brandSub{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.2;
-  margin-top:2px;
-}
-
-.lang{
-  display:flex;
-  align-items:center;
-  gap:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
 }
 
 .lang span{
-  cursor:pointer;
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background:#fff;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.lang span.active{
-  border-color:rgba(11,31,74,.22);
-  background:var(--chip);
-  color:var(--chipText);
-  font-weight:600;
+cursor:pointer;
+margin-left:8px;
+padding:5px 10px;
+border:1px solid #ddd;
+border-radius:20px;
+font-size:12px;
 }
 
 .card{
-  background:var(--card);
-  border:1px solid rgba(229,231,235,.9);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 14px 40px rgba(15,23,42,.06);
-  margin-bottom:16px;
-}
-
-.back{
-  display:inline-block;
-  font-size:13px;
-  color:var(--muted);
-  text-decoration:none;
-  margin-bottom:10px;
+background:white;
+border-radius:14px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
 }
 
 h1{
-  font-size:24px;
-  margin:0 0 8px;
-}
-
-.sub{
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.55;
-}
-
-.infoRow{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:14px;
-}
-
-.infoBox{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:12px;
-  background:#FBFCFF;
-}
-
-.infoBox span{
-  display:block;
-  font-size:11px;
-  color:var(--muted);
-  margin-bottom:4px;
-}
-
-.infoBox strong{
-  display:block;
-  font-size:15px;
-  color:#111827;
-}
-
-.notice{
-  margin-top:14px;
-  background:#F9FAFB;
-  border:1px solid var(--line);
-  padding:14px;
-  border-radius:12px;
-  font-size:13px;
-  color:#374151;
-  line-height:1.55;
-}
-
-.sectionTitle{
-  font-size:14px;
-  font-weight:700;
-  margin-bottom:10px;
-}
-
-.tableWrap{
-  overflow-x:auto;
+margin-top:0;
+font-size:24px;
 }
 
 .table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-.table th,
-.table td{
-  padding:14px 12px;
-  border-bottom:1px solid var(--line);
-  text-align:left;
-  vertical-align:middle;
+width:100%;
+border-collapse:collapse;
 }
 
 .table th{
-  font-size:12px;
-  color:var(--muted);
-  font-weight:600;
-  background:#F8FAFC;
+text-align:left;
+font-size:12px;
+color:#6B7280;
+padding:10px;
 }
 
-.bestRow{
-  background:var(--successBg);
+.table td{
+padding:14px 10px;
+border-top:1px solid #eee;
 }
 
-.providerName{
-  font-size:14px;
-  font-weight:700;
-  color:#111827;
-}
-
-.providerDesc{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:4px;
-  line-height:1.45;
+.best{
+background:#ECFDF5;
 }
 
 .bestTag{
-  display:inline-block;
-  margin-left:8px;
-  padding:4px 8px;
-  border-radius:999px;
-  background:#D1FAE5;
-  color:var(--success);
-  font-size:11px;
-  font-weight:700;
-}
-
-.metricMain{
-  font-size:14px;
-  font-weight:700;
-  color:#111827;
-}
-
-.metricSub{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:4px;
+background:#10B981;
+color:white;
+padding:3px 7px;
+font-size:11px;
+border-radius:8px;
+margin-left:6px;
 }
 
 .btn{
-  display:inline-block;
-  padding:10px 14px;
-  border-radius:10px;
-  background:var(--primary);
-  color:#fff;
-  text-decoration:none;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-.btn:hover{
-  background:var(--primary2);
-}
-
-.notesGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:10px;
-}
-
-.noteCard{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:12px;
-  background:#fff;
-}
-
-.noteCard strong{
-  display:block;
-  font-size:13px;
-  margin-bottom:6px;
-}
-
-.noteCard p{
-  margin:0;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.5;
+background:#0B1F4A;
+color:white;
+padding:10px 14px;
+border-radius:8px;
+font-size:13px;
+text-decoration:none;
 }
 
 .footer{
-  text-align:center;
-  font-size:12px;
-  color:var(--muted);
-  margin-top:20px;
-  line-height:1.6;
+text-align:center;
+font-size:12px;
+color:#6B7280;
+margin-top:20px;
 }
 
-.footer a{
-  color:var(--muted);
-  text-decoration:none;
-}
-
-.footer a:hover{
-  text-decoration:underline;
-}
-
-@media (max-width: 760px){
-  .infoRow,
-  .notesGrid{
-    grid-template-columns:1fr;
-  }
-
-  h1{
-    font-size:21px;
-  }
-}
 </style>
+
 </head>
 
 <body>
+
 <div class="container">
 
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="white" aria-hidden="true">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
-                   10-4.48 10-10S17.52 2 12 2zm1 17.93V20h-2v-.07
-                   c-3.39-.49-6-3.39-6-6.93h2c0 2.76 2.24 5 5 5s5-2.24 5-5
-                   c0-2.41-1.72-4.41-4-4.9V8h2v.1c3.39.49 6 3.39 6 6.9
-                   0 3.54-2.61 6.44-6 6.93z"/>
-        </svg>
-      </div>
-      <div class="brandText">
-        <div class="brandTitle" id="brandTitle">Transfer Comparison</div>
-        <div class="brandSub" id="brandSub">Reference only • Independent comparison</div>
-      </div>
-    </div>
+<div class="topbar">
 
-    <div class="lang">
-      <span id="btnEN" onclick="setLang('en', true)">EN</span>
-      <span id="btnKM" onclick="setLang('km', true)">ខ្មែរ</span>
-      <span id="btnZH" onclick="setLang('zh', true)">中文</span>
-    </div>
-  </div>
+<div>
+<strong>Transfer Comparison</strong>
+</div>
 
-  <div class="card">
-    <a href="/" class="back" onclick="trackBack()" id="backText">← Back to calculator</a>
+<div class="lang">
+<span onclick="setLang('en')">EN</span>
+<span onclick="setLang('zh')">中文</span>
+<span onclick="setLang('km')">ខ្មែរ</span>
+</div>
 
-    <h1 id="title">Compare transfer services</h1>
-    <div class="sub" id="subtitle">
-      Review estimated fees, rates and payout values before sending money.
-    </div>
+</div>
 
-    <div class="infoRow">
-      <div class="infoBox">
-        <span id="amountLabel">Amount</span>
-        <strong id="amountInfo">—</strong>
-      </div>
-      <div class="infoBox">
-        <span id="routeLabel">Route</span>
-        <strong id="routeInfo">—</strong>
-      </div>
-    </div>
+<div class="card">
 
-    <div class="notice" id="noticeText">
-      This page is for informational comparison only. We do not provide financial services. Some outbound links may be affiliate links.
-    </div>
-  </div>
+<h1 id="title">Compare transfer services</h1>
 
-  <div class="card">
-    <div class="sectionTitle" id="compareTitle">Estimated payout comparison</div>
+<div id="amountInfo"></div>
+<div id="routeInfo"></div>
 
-    <div class="tableWrap">
-      <table class="table">
-        <thead>
-          <tr>
-            <th id="colProvider">Provider</th>
-            <th id="colFees">Fees</th>
-            <th id="colRate">Rate</th>
-            <th id="colReceive">Estimated receive</th>
-            <th id="colSpeed">Speed</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-  </div>
+</div>
 
-  <div class="card">
-    <div class="sectionTitle" id="tipsTitle">What to compare</div>
+<div class="card">
 
-    <div class="notesGrid">
-      <div class="noteCard">
-        <strong id="tip1Title">Total cost</strong>
-        <p id="tip1Text">Low fees do not always mean the best deal. Exchange rate spread also matters.</p>
-      </div>
-      <div class="noteCard">
-        <strong id="tip2Title">Transfer speed</strong>
-        <p id="tip2Text">Faster delivery can cost more. Choose based on urgency.</p>
-      </div>
-      <div class="noteCard">
-        <strong id="tip3Title">Final payout</strong>
-        <p id="tip3Text">The most important number is how much the recipient actually gets.</p>
-      </div>
-    </div>
-  </div>
+<table class="table">
 
-  <div class="footer" id="footerText">
-    This page compares international money transfer services.
-    <br>
-    <a href="/privacy.html">Privacy</a> ·
-    <a href="/terms.html">Terms</a> ·
-    <a href="/disclaimer.html">Disclaimer</a>
-  </div>
+<thead>
+
+<tr>
+<th id="providerLabel">Provider</th>
+<th id="feesLabel">Fees</th>
+<th id="receiveLabel">Estimated receive</th>
+<th></th>
+</tr>
+
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</div>
+
+<div class="footer">
+
+Reference comparison only.
+
+</div>
 
 </div>
 
 <script>
-let currentLang = "en";
 
-// 后期把这三个链接替换成真实 affiliate 链接
 const AFFILIATE_LINKS = {
-  A: "#",
-  B: "#",
-  C: "#"
-};
 
-const PROVIDERS = [
-  {
-    code: "A",
-    feesUsd: 4,
-    fxMarkupPct: 0.0006,
-    name: {
-      en: "Wise",
-      zh: "Wise 国际汇款",
-      km: "Wise ផ្ទេរប្រាក់អន្តរជាតិ"
-    },
-    desc: {
-      en: "Low fees and strong exchange rates. Popular for international transfers.",
-      zh: "手续费低，汇率接近市场价，适合国际汇款。",
-      km: "ថ្លៃសេវាទាប និងអត្រាប្តូរប្រាក់ល្អ សម្រាប់ផ្ទេរប្រាក់អន្តរជាតិ។"
-    },
-    speed: {
-      en: "Minutes – Same day",
-      zh: "几分钟到当天",
-      km: "ប៉ុន្មាននាទី ដល់ ក្នុងថ្ងៃ"
-    }
-  },
-  {
-    code: "B",
-    feesUsd: 7,
-    fxMarkupPct: 0.0018,
-    name: {
-      en: "Remitly",
-      zh: "Remitly 汇款",
-      km: "Remitly ផ្ទេរប្រាក់"
-    },
-    desc: {
-      en: "Fast transfers to many countries with multiple payout options.",
-      zh: "支持多国家汇款，到账速度快。",
-      km: "ផ្ទេរប្រាក់ទៅប្រទេសជាច្រើន និងមានជម្រើសទទួលប្រាក់ច្រើន។"
-    },
-    speed: {
-      en: "Same day",
-      zh: "当天到账",
-      km: "ក្នុងថ្ងៃតែមួយ"
-    }
-  },
-  {
-    code: "C",
-    feesUsd: 5,
-    fxMarkupPct: 0.0025,
-    name: {
-      en: "XE Money Transfer",
-      zh: "XE 国际汇款",
-      km: "XE ផ្ទេរប្រាក់"
-    },
-    desc: {
-      en: "Trusted global currency provider with international transfer service.",
-      zh: "全球汇率品牌，提供国际转账服务。",
-      km: "ម៉ាកអត្រាប្តូរប្រាក់សកល ដែលមានសេវាផ្ទេរប្រាក់។"
-    },
-    speed: {
-      en: "1–2 days",
-      zh: "1–2天",
-      km: "១–២ថ្ងៃ"
-    }
-  }
-];
+wise:"https://wise.prf.hn/click/camref:1011l5ECpH",
+remitly:"#",
+xe:"#"
 
-const TEXT = {
-  en: {
-    brandTitle: "Transfer Comparison",
-    brandSub: "Reference only • Independent comparison",
-    back: "← Back to calculator",
-    title: "Compare transfer services",
-    subtitle: "Review estimated fees, rates and payout values before sending money.",
-    amount: "Amount",
-    route: "Route",
-    notice: "This page is for informational comparison only. We do not provide financial services. Some outbound links may be affiliate links.",
-    compareTitle: "Estimated payout comparison",
-    provider: "Provider",
-    fees: "Fees",
-    rate: "Rate",
-    receive: "Estimated receive",
-    speed: "Speed",
-    visit: "Visit",
-    recommended: "Recommended",
-    fixedEstimate: "Fixed estimate",
-    unitRate: "per 1 unit",
-    tipsTitle: "What to compare",
-    tip1Title: "Total cost",
-    tip1Text: "Low fees do not always mean the best deal. Exchange rate spread also matters.",
-    tip2Title: "Transfer speed",
-    tip2Text: "Faster delivery can cost more. Choose based on urgency.",
-    tip3Title: "Final payout",
-    tip3Text: "The most important number is how much the recipient actually gets.",
-    footer: "This page compares international money transfer services."
-  },
+}
 
-  zh: {
-    brandTitle: "转账服务对比",
-    brandSub: "仅供参考 • 独立比较",
-    back: "← 返回换汇工具",
-    title: "比较转账服务",
-    subtitle: "在转账前先看预估手续费、汇率和到账金额。",
-    amount: "金额",
-    route: "路线",
-    notice: "本页面仅作信息对比展示，我们不提供金融服务。部分外部链接可能为联盟推广链接。",
-    compareTitle: "预计到账金额对比",
-    provider: "服务商",
-    fees: "手续费",
-    rate: "汇率",
-    receive: "预计到账",
-    speed: "到账速度",
-    visit: "访问",
-    recommended: "推荐",
-    fixedEstimate: "固定估算",
-    unitRate: "每 1 单位",
-    tipsTitle: "比较时要看什么",
-    tip1Title: "总成本",
-    tip1Text: "手续费低不一定最划算，汇率差价同样重要。",
-    tip2Title: "到账速度",
-    tip2Text: "更快的到账通常更贵，应根据时效需求选择。",
-    tip3Title: "最终到账",
-    tip3Text: "最关键的数据是收款人最终实际拿到多少。",
-    footer: "本页面用于比较国际转账服务。"
-  },
+const PROVIDERS=[
 
-  km: {
-    brandTitle: "ការប្រៀបធៀបសេវាផ្ទេរប្រាក់",
-    brandSub: "សម្រាប់យោង • ការប្រៀបធៀបឯករាជ្យ",
-    back: "← ត្រឡប់ទៅម៉ាស៊ីនគណនា",
-    title: "ប្រៀបធៀបសេវាផ្ទេរប្រាក់",
-    subtitle: "ពិនិត្យថ្លៃសេវា អត្រាប្តូរប្រាក់ និងចំនួនទទួលបាន មុនពេលផ្ទេរ។",
-    amount: "ចំនួន",
-    route: "ផ្លូវប្តូរ",
-    notice: "ទំព័រនេះសម្រាប់ប្រៀបធៀបព័ត៌មានប៉ុណ្ណោះ។ យើងមិនផ្តល់សេវាហិរញ្ញវត្ថុទេ។ តំណខ្លះអាចជាតំណដៃគូ។",
-    compareTitle: "ការប្រៀបធៀបចំនួនទទួលបាន",
-    provider: "អ្នកផ្តល់សេវា",
-    fees: "ថ្លៃសេវា",
-    rate: "អត្រា",
-    receive: "ចំនួនទទួលបាន",
-    speed: "ល្បឿន",
-    visit: "ចូលមើល",
-    recommended: "ណែនាំ",
-    fixedEstimate: "ការប៉ាន់ស្មានថេរ",
-    unitRate: "ក្នុង ១ ឯកតា",
-    tipsTitle: "អ្វីដែលត្រូវប្រៀបធៀប",
-    tip1Title: "ចំណាយសរុប",
-    tip1Text: "ថ្លៃសេវាទាបមិនមានន័យថាល្អបំផុតទេ។ ភាពខុសគ្នានៃអត្រាប្តូរប្រាក់ក៏សំខាន់ដែរ។",
-    tip2Title: "ល្បឿនផ្ទេរ",
-    tip2Text: "ការផ្ទេរលឿនជាងអាចថ្លៃជាង។ ជ្រើសរើសតាមតម្រូវការពេលវេលា។",
-    tip3Title: "ចំនួនទទួលបានចុងក្រោយ",
-    tip3Text: "លេខសំខាន់បំផុតគឺអ្នកទទួលទទួលបានប៉ុន្មានពិតប្រាកដ។",
-    footer: "ទំព័រនេះប្រៀបធៀបសេវាផ្ទេរប្រាក់អន្តរជាតិ។"
-  }
-};
+{
+code:"wise",
+fees:4,
+name:{
+en:"Wise",
+zh:"Wise国际汇款",
+km:"Wise ផ្ទេរប្រាក់"
+},
+desc:{
+en:"Low fees and real exchange rate",
+zh:"手续费低，真实汇率",
+km:"ថ្លៃទាប និងអត្រាពិត"
+}
+},
+
+{
+code:"remitly",
+fees:7,
+name:{
+en:"Remitly",
+zh:"Remitly汇款",
+km:"Remitly ផ្ទេរប្រាក់"
+},
+desc:{
+en:"Fast international transfers",
+zh:"国际快速汇款",
+km:"ផ្ទេរប្រាក់លឿន"
+}
+},
+
+{
+code:"xe",
+fees:5,
+name:{
+en:"XE Transfer",
+zh:"XE国际汇款",
+km:"XE ផ្ទេរប្រាក់"
+},
+desc:{
+en:"Global currency provider",
+zh:"全球汇率品牌",
+km:"ម៉ាកអត្រាប្តូរប្រាក់"
+}
+}
+
+]
 
 function getParams(){
-  const url = new URL(window.location.href);
-  return {
-    amount: parseFloat(url.searchParams.get("amount")) || 1000,
-    from: url.searchParams.get("from") || "USD",
-    to: url.searchParams.get("to") || "KHR"
-  };
+
+const url=new URL(window.location.href)
+
+return{
+
+amount:parseFloat(url.searchParams.get("amount"))||1000,
+from:url.searchParams.get("from")||"USD",
+to:url.searchParams.get("to")||"KHR"
+
 }
 
-function formatNumber(n, decimals=2){
-  if (typeof n !== "number" || !isFinite(n)) return "—";
-  return n.toLocaleString(undefined, {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  });
 }
 
-function formatCurrencyAmount(value, code){
-  const decimals = code === "KHR" ? 0 : 2;
-  return `${formatNumber(value, decimals)} ${code}`;
+function calculate(){
+
+const p=getParams()
+
+const rate=4016
+
+document.getElementById("amountInfo").innerText=
+"Amount: "+p.amount+" "+p.from
+
+document.getElementById("routeInfo").innerText=
+"Route: "+p.from+" → "+p.to
+
+const tbody=document.getElementById("tableBody")
+
+tbody.innerHTML=""
+
+PROVIDERS.forEach((prov,i)=>{
+
+const receive=(p.amount-prov.fees)*rate
+
+const tr=document.createElement("tr")
+
+if(i===0) tr.className="best"
+
+tr.innerHTML=`
+
+<td>
+
+<strong>${prov.name.en}</strong>
+
+${i===0?'<span class="bestTag">Recommended</span>':''}
+
+<div style="font-size:12px;color:#6B7280">${prov.desc.en}</div>
+
+</td>
+
+<td>$${prov.fees}</td>
+
+<td>${receive.toLocaleString()} KHR</td>
+
+<td>
+
+<a class="btn" onclick="goProvider('${prov.code}','${prov.name.en}')">
+
+Check
+
+</a>
+
+</td>
+
+`
+
+tbody.appendChild(tr)
+
+})
+
 }
 
-function getBaseRate(from, to){
-  if (from === to) return 1;
-  if (from === "USD" && to === "KHR") return 4016;
-  if (from === "USD" && to === "CNY") return 7.18;
-  if (from === "KHR" && to === "USD") return 1 / 4016;
-  if (from === "CNY" && to === "USD") return 1 / 7.18;
-  if (from === "KHR" && to === "CNY") return 7.18 / 4016;
-  if (from === "CNY" && to === "KHR") return 4016 / 7.18;
-  return 1;
+function goProvider(code,name){
+
+gtag('event','provider_click',{
+provider:name
+})
+
+const url=AFFILIATE_LINKS[code]||"#"
+
+window.location.href=url
+
 }
 
-function calculateRows(){
-  const { amount, from, to } = getParams();
-  const baseRate = getBaseRate(from, to);
+calculate()
 
-  const rows = PROVIDERS.map(p => {
-    const fee = p.feesUsd;
-    const netAmount = Math.max(amount - fee, 0);
-    const effectiveRate = baseRate * (1 - p.fxMarkupPct);
-    const receive = netAmount * effectiveRate;
-
-    return {
-      ...p,
-      fee,
-      effectiveRate,
-      receive
-    };
-  });
-
-  let best = rows[0];
-  rows.forEach(r => {
-    if (r.receive > best.receive) best = r;
-  });
-
-  return { rows, best };
-}
-
-function renderTable(){
-  const { amount, from, to } = getParams();
-  const t = TEXT[currentLang];
-  const { rows, best } = calculateRows();
-
-  document.getElementById("amountInfo").innerText =
-    formatCurrencyAmount(amount, from);
-
-  document.getElementById("routeInfo").innerText =
-    `${from} → ${to}`;
-
-  const tbody = document.getElementById("tableBody");
-  tbody.innerHTML = "";
-
-  rows.forEach(r => {
-    const tr = document.createElement("tr");
-    if (r.code === best.code) tr.className = "bestRow";
-
-    tr.innerHTML = `
-      <td>
-        <div class="providerName">
-          ${r.name[currentLang]}
-          ${r.code === best.code ? `<span class="bestTag">${t.recommended}</span>` : ""}
-        </div>
-        <div class="providerDesc">${r.desc[currentLang]}</div>
-      </td>
-      <td>
-        <div class="metricMain">${formatCurrencyAmount(r.fee, from)}</div>
-        <div class="metricSub">${t.fixedEstimate}</div>
-      </td>
-      <td>
-        <div class="metricMain">${formatNumber(r.effectiveRate, to === "KHR" ? 0 : 4)}</div>
-        <div class="metricSub">${t.unitRate}</div>
-      </td>
-      <td>
-        <div class="metricMain">${formatCurrencyAmount(r.receive, to)}</div>
-      </td>
-      <td>
-        <div class="metricMain">${r.speed[currentLang]}</div>
-      </td>
-      <td>
-        <a href="javascript:void(0)" class="btn" onclick="goProvider('${r.code}','${r.name.en}')">${t.visit}</a>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function setLang(lang, userInitiated=false){
-  currentLang = TEXT[lang] ? lang : "en";
-
-  if (userInitiated) {
-    try { localStorage.setItem("lang_pref", currentLang); } catch {}
-  }
-
-  document.getElementById("btnEN").classList.toggle("active", currentLang === "en");
-  document.getElementById("btnKM").classList.toggle("active", currentLang === "km");
-  document.getElementById("btnZH").classList.toggle("active", currentLang === "zh");
-
-  const t = TEXT[currentLang];
-  document.getElementById("brandTitle").innerText = t.brandTitle;
-  document.getElementById("brandSub").innerText = t.brandSub;
-  document.getElementById("backText").innerText = t.back;
-  document.getElementById("title").innerText = t.title;
-  document.getElementById("subtitle").innerText = t.subtitle;
-  document.getElementById("amountLabel").innerText = t.amount;
-  document.getElementById("routeLabel").innerText = t.route;
-  document.getElementById("noticeText").innerText = t.notice;
-  document.getElementById("compareTitle").innerText = t.compareTitle;
-  document.getElementById("colProvider").innerText = t.provider;
-  document.getElementById("colFees").innerText = t.fees;
-  document.getElementById("colRate").innerText = t.rate;
-  document.getElementById("colReceive").innerText = t.receive;
-  document.getElementById("colSpeed").innerText = t.speed;
-  document.getElementById("tipsTitle").innerText = t.tipsTitle;
-  document.getElementById("tip1Title").innerText = t.tip1Title;
-  document.getElementById("tip1Text").innerText = t.tip1Text;
-  document.getElementById("tip2Title").innerText = t.tip2Title;
-  document.getElementById("tip2Text").innerText = t.tip2Text;
-  document.getElementById("tip3Title").innerText = t.tip3Title;
-  document.getElementById("tip3Text").innerText = t.tip3Text;
-  document.getElementById("footerText").innerHTML = `
-    ${t.footer}
-    <br>
-    <a href="/privacy.html">Privacy</a> ·
-    <a href="/terms.html">Terms</a> ·
-    <a href="/disclaimer.html">Disclaimer</a>
-  `;
-
-  renderTable();
-}
-
-function goProvider(code, name){
-  try{
-    if(typeof gtag === "function"){
-      gtag("event","provider_click",{
-        provider_name:name,
-        provider_code:code,
-        page:"transfer_compare"
-      });
-    }
-  }catch(e){}
-
-  const url = AFFILIATE_LINKS[code] || "#";
-  setTimeout(()=>{
-    window.location.href = url;
-  },150);
-}
-
-function trackBack(){
-  try{
-    if(typeof gtag === "function"){
-      gtag("event","back_to_calculator",{page:"transfer_compare"});
-    }
-  }catch(e){}
-}
-
-(function init(){
-  let initialLang = "en";
-  try{
-    const saved = localStorage.getItem("lang_pref");
-    if(saved && TEXT[saved]) initialLang = saved;
-    else {
-      const l = (navigator.language || "").toLowerCase();
-      if(l.startsWith("zh")) initialLang = "zh";
-      else if(l.startsWith("km")) initialLang = "km";
-    }
-  }catch(e){}
-  setLang(initialLang, false);
-})();
 </script>
+
 </body>
 </html>
