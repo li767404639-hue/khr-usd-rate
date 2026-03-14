@@ -8,7 +8,7 @@
 <title>KHR to USD Exchange Rate Calculator</title>
 
 <meta name="description"
-content="Free KHR to USD exchange rate calculator. Convert Cambodian Riel to US Dollar instantly.">
+content="Free KHR to USD exchange rate calculator. Convert Cambodian Riel to US Dollar instantly and estimate how much USD you may receive.">
 
 <link rel="canonical"
 href="https://khr-usd-rate.vercel.app/khr-to-usd.html">
@@ -27,69 +27,157 @@ gtag('config', 'G-3BT4GY2B36');
 
 <style>
 
-body{
-font-family:system-ui,-apple-system;
-background:#F3F6FB;
-margin:0;
+:root{
+--bg:#F3F6FB;
+--card:#FFFFFF;
+--text:#0F172A;
+--muted:#6B7280;
+--line:#E5E7EB;
+--primary:#0B1F4A;
+--primary2:#123A8A;
+--chip:#EEF2FF;
+--chipText:#1E3A8A;
 }
 
-.wrap{
-max-width:700px;
-margin:auto;
-padding:20px;
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+background: radial-gradient(1200px 600px at 20% 0%, #EAF0FF 0%, var(--bg) 45%, var(--bg) 100%);
+color:var(--text);
+}
+
+.container{
+max-width:900px;
+margin:28px auto;
+padding:0 16px 30px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:14px;
+flex-wrap:wrap;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo{
+width:40px;
+height:40px;
+border-radius:12px;
+background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.brandTitle{
+font-size:17px;
+font-weight:700;
+}
+
+.brandSub{
+font-size:12px;
+color:var(--muted);
+}
+
+.lang span{
+cursor:pointer;
+padding:6px 10px;
+border:1px solid var(--line);
+border-radius:999px;
+margin-left:6px;
 }
 
 .card{
-background:white;
-padding:20px;
-border-radius:14px;
-box-shadow:0 10px 30px rgba(0,0,0,0.05);
+background:var(--card);
+border:1px solid var(--line);
+border-radius:18px;
+padding:18px;
+margin-bottom:16px;
 }
 
-h1{
-margin-top:0;
+.calcBox{
+display:grid;
+grid-template-columns:1fr auto;
+gap:10px;
+margin-top:14px;
 }
 
 input{
 width:100%;
 padding:12px;
-border-radius:10px;
-border:1px solid #E5E7EB;
+border:1px solid var(--line);
+border-radius:14px;
 font-size:16px;
 }
 
 button{
-padding:12px 18px;
-background:#0B1F4A;
-color:white;
 border:none;
-border-radius:10px;
+border-radius:14px;
+padding:12px 16px;
+background:var(--primary);
+color:#fff;
 cursor:pointer;
-margin-top:10px;
 }
 
-.result{
+.resultBox{
+margin-top:14px;
+border:1px solid var(--line);
+border-radius:16px;
+padding:14px;
+}
+
+.resultValue{
 font-size:28px;
+font-weight:700;
+}
+
+.ctaBtn{
+display:inline-block;
+background:var(--primary);
+color:#fff;
+padding:10px 14px;
+border-radius:10px;
+text-decoration:none;
 margin-top:10px;
-font-weight:600;
 }
 
-.lang{
-margin-bottom:10px;
+.footer{
+text-align:center;
+font-size:12px;
+color:var(--muted);
+margin-top:20px;
 }
 
-.lang span{
-cursor:pointer;
-margin-right:10px;
+.footer a{
+color:var(--muted);
+text-decoration:none;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="wrap">
+<div class="container">
+
+<div class="topbar">
+
+<div class="brand">
+<div class="logo"></div>
+<div>
+<div class="brandTitle" id="brandTitle">KHR to USD Guide</div>
+<div class="brandSub" id="brandSub">Cambodia exchange rate information</div>
+</div>
+</div>
 
 <div class="lang">
 <span onclick="setLang('en')">EN</span>
@@ -97,23 +185,84 @@ margin-right:10px;
 <span onclick="setLang('km')">ខ្មែរ</span>
 </div>
 
+</div>
+
 <div class="card">
 
-<h1 id="title">KHR to USD Calculator</h1>
+<h1 id="title">KHR to USD exchange rate calculator</h1>
 
-<p id="desc">
-Convert Cambodian Riel to US Dollar instantly.
+<p id="heroSub">
+Check the latest KHR to USD conversion and estimate how much US Dollar you may receive.
 </p>
 
-<label id="label">KHR amount</label>
+<div class="calcBox">
+
+<div>
+
+<label id="amountLabel">KHR amount</label>
 
 <input id="amount" type="number" value="40000">
 
-<button onclick="calculate()" id="btn">
+</div>
+
+<button onclick="calculate()" id="calcBtn">
 Calculate
 </button>
 
-<div class="result" id="result">—</div>
+</div>
+
+<div class="resultBox">
+
+<div id="result" class="resultValue">—</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2 id="whyTitle">Why check KHR to USD first?</h2>
+
+<p id="whyText">
+If you exchange Cambodian Riel to US Dollars, small rate differences can affect the amount you receive.
+Checking a reference rate first helps you compare offers more accurately.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2 id="tipsTitle">Tips before exchanging money</h2>
+
+<ul id="tipsList">
+<li>Compare the quoted rate with a reference rate.</li>
+<li>Check if additional service fees apply.</li>
+<li>For larger KHR amounts, rate differences matter more.</li>
+<li>Consider comparing transfer services as well.</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2 id="ctaTitle">Need to compare transfer services?</h2>
+
+<p id="ctaText">
+If you are transferring money internationally, compare transfer services to find better rates.
+</p>
+
+<a href="/transfer.html?from=KHR&to=USD&amount=40000" class="ctaBtn" id="ctaBtn">
+Compare transfer services
+</a>
+
+</div>
+
+<div class="footer">
+
+<a href="/usd-to-khr.html">USD to KHR</a> ·
+<a href="/cny-to-khr.html">CNY to KHR</a> ·
+<a href="/thb-to-khr.html">THB to KHR</a> ·
+<a href="/">Calculator</a>
 
 </div>
 
@@ -123,26 +272,26 @@ Calculate
 
 let usd_khr=4000;
 
-const i18n={
+const TEXT={
 
 en:{
-title:"KHR to USD Calculator",
-desc:"Convert Cambodian Riel to US Dollar instantly.",
-label:"KHR amount",
+title:"KHR to USD exchange rate calculator",
+hero:"Check the latest KHR to USD conversion and estimate how much US Dollar you may receive.",
+amount:"KHR amount",
 btn:"Calculate"
 },
 
 zh:{
 title:"瑞尔换美元计算器",
-desc:"快速计算柬埔寨瑞尔兑换美元。",
-label:"瑞尔金额",
+hero:"查看最新瑞尔兑换美元汇率并估算可获得的金额。",
+amount:"瑞尔金额",
 btn:"计算"
 },
 
 km:{
 title:"គណនា KHR ទៅ USD",
-desc:"គណនាប្រាក់រៀលទៅដុល្លារអាមេរិក",
-label:"ចំនួន KHR",
+hero:"ពិនិត្យការបម្លែង KHR ទៅ USD និងប៉ាន់ស្មានចំនួនដែលអ្នកអាចទទួលបាន។",
+amount:"ចំនួន KHR",
 btn:"គណនា"
 }
 
@@ -150,10 +299,10 @@ btn:"គណនា"
 
 function setLang(lang){
 
-document.getElementById("title").innerText=i18n[lang].title;
-document.getElementById("desc").innerText=i18n[lang].desc;
-document.getElementById("label").innerText=i18n[lang].label;
-document.getElementById("btn").innerText=i18n[lang].btn;
+document.getElementById("title").innerText=TEXT[lang].title;
+document.getElementById("heroSub").innerText=TEXT[lang].hero;
+document.getElementById("amountLabel").innerText=TEXT[lang].amount;
+document.getElementById("calcBtn").innerText=TEXT[lang].btn;
 
 }
 
@@ -178,16 +327,13 @@ const khr=parseFloat(document.getElementById("amount").value);
 const usd=khr/usd_khr;
 
 document.getElementById("result").innerText=
-
 khr.toLocaleString()+" KHR ≈ "+usd.toFixed(2)+" USD";
 
 if(typeof gtag==="function"){
 
 gtag("event","calculate",{
-
 from_currency:"KHR",
 to_currency:"USD"
-
 });
 
 }
