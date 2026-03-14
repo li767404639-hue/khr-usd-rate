@@ -24,6 +24,58 @@
 <meta name="theme-color" content="#0B1F4A">
 
 <style>
+     .footer a:hover{
+  text-decoration:underline;
+}
+
+/* ===== guides cards ===== */
+
+.guidesWrap{
+  margin-top:30px;
+  padding-top:20px;
+  border-top:1px solid #E5E7EB;
+}
+
+.guidesTitle{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:12px;
+  text-align:center;
+}
+
+.guidesGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.guideCard{
+  display:block;
+  text-decoration:none;
+  color:#111827;
+  background:#fff;
+  border:1px solid #E5E7EB;
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:14px;
+  line-height:1.4;
+  transition:all .18s ease;
+  box-shadow:0 4px 12px rgba(15,23,42,.04);
+}
+
+.guideCard:hover{
+  border-color:rgba(11,31,74,.22);
+  background:#F8FAFF;
+  transform:translateY(-1px);
+}
+
+@media (max-width:640px){
+  .guidesGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
   :root{
     --bg:#F3F6FB;
     --card:#FFFFFF;
