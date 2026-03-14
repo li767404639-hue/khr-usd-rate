@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>USD to KHR Exchange Rate Calculator</title>
+<meta name="description" content="Free USD to KHR exchange rate calculator. Check US Dollar to Cambodian Riel conversion, compare rates, and estimate how much KHR you may receive.">
+<meta name="theme-color" content="#0B1F4A">
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3BT4GY2B36');
+</script>
+
+<style>
+:root{
+  --bg:#F3F6FB;
+  --card:#FFFFFF;
+  --text:#0F172A;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --primary:#0B1F4A;
+  --primary2:#123A8A;
+  --chip:#EEF2FF;
+  --chipText:#1E3A8A;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background: radial-gradient(1200px 600px at 20% 0%, #EAF0FF 0%, var(--bg) 45%, var(--bg) 100%);
+  color:var(--text);
+}
+
+.container{
+  max-width:900px;
+  margin:28px auto;
+  padding:0 16px 30px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 8px 20px rgba(11,31,74,.25);
+}
+
+.brandText{
+  display:flex;
+  flex-direction:column;
+}
+
+.brandTitle{
+  font-size:17px;
+  font-weight:700;
+  line-height:1.2;
+}
+
+.brandSub{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.2;
+  margin-top:2px;
+}
+
+.lang{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.lang span{
+  cursor:pointer;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.lang span.active{
+  border-color:rgba(11,31,74,.22);
+  background:var(--chip);
+  color:var(--chipText);
+  font-weight:600;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid rgba(229,231,235,.9);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 14px 40px rgba(15,23,42,.06);
+  margin-bottom:16px;
+}
+
+.back{
+  display:inline-block;
+  font-size:13px;
+  color:var(--muted);
+  text-decoration:none;
+  margin-bottom:10px;
+}
+
+h1{
+  font-size:26px;
+  margin:0 0 8px;
+}
+
+h2{
+  font-size:18px;
+  margin:0 0 10px;
+}
+
+p{
+  font-size:14px;
+  line-height:1.65;
+  color:#374151;
+}
+
+.heroSub{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.55;
+}
+
+.calcBox{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  margin-top:14px;
+  align-items:end;
+}
+
+label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  font-size:16px;
+  outline:none;
+  background:#fff;
+}
+
+input:focus{
+  border-color:rgba(11,31,74,.35);
+  box-shadow:0 0 0 4px rgba(11,31,74,.08);
+}
+
+.calcBtn{
+  border:none;
+  border-radius:14px;
+  padding:12px 16px;
+  background:var(--primary);
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  min-width:110px;
+}
+
+.calcBtn:hover{
+  background:var(--primary2);
+}
+
+.resultBox{
+  margin-top:14px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  background:#FBFCFF;
+}
+
+.resultLabel{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.resultValue{
+  font-size:28px;
+  font-weight:700;
+  line-height:1.2;
+}
+
+.infoGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.infoMini{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  background:#fff;
+}
+
+.infoMini span{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+
+.infoMini strong{
+  display:block;
+  font-size:15px;
+}
+
+.ctaBtn{
+  display:inline-block;
+  background:var(--primary);
+  color:#fff;
+  padding:11px 16px;
+  border-radius:10px;
+  text-decoration:none;
+  font-size:14px;
+  margin-top:10px;
+}
+
+.ctaBtn:hover{
+  background:var(--primary2);
+}
+
+.list{
+  margin:0;
+  padding-left:18px;
+}
+
+.list li{
+  color:#374151;
+  font-size:14px;
+  line-height:1.6;
+  margin-bottom:8px;
+}
+
+.footer{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  margin-top:20px;
+  line-height:1.6;
+}
+
+.footer a{
+  color:var(--muted);
+  text-decoration:none;
+}
+
+.footer a:hover{
+  text-decoration:underline;
+}
+
+@media (max-width:700px){
+  .calcBox,
+  .infoGrid{
+    grid-template-columns:1fr;
+  }
+
+  h1{
+    font-size:22px;
+  }
+
+  .resultValue{
+    font-size:24px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="white" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                   10-4.48 10-10S17.52 2 12 2zm1 17.93V20h-2v-.07
+                   c-3.39-.49-6-3.39-6-6.93h2c0 2.76 2.24 5 5 5s5-2.24 5-5
+                   c0-2.41-1.72-4.41-4-4.9V8h2v.1c3.39.49 6 3.39 6 6.9
+                   0 3.54-2.61 6.44-6 6.93z"/>
+        </svg>
+      </div>
+      <div class="brandText">
+        <div class="brandTitle" id="brandTitle">USD to KHR Guide</div>
+        <div class="brandSub" id="brandSub">Cambodia exchange rate information</div>
+      </div>
+    </div>
+
+    <div class="lang">
+      <span id="btnEN" onclick="setLang('en', true)">EN</span>
+      <span id="btnKM" onclick="setLang('km', true)">ខ្មែរ</span>
+      <span id="btnZH" onclick="setLang('zh', true)">中文</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <a href="/" class="back" id="backText">← Back to calculator</a>
+    <h1 id="title">USD to KHR exchange rate calculator</h1>
+    <div class="heroSub" id="heroSub">
+      Check the latest USD to KHR conversion and estimate how much Cambodian Riel you may receive.
+    </div>
+
+    <div class="calcBox">
+      <div>
+        <label id="amountLabel">USD amount</label>
+        <input id="usdAmount" type="number" inputmode="decimal" value="100" placeholder="Enter USD amount">
+      </div>
+      <button class="calcBtn" id="calcBtn" type="button">Calculate</button>
+    </div>
+
+    <div class="resultBox">
+      <div class="resultLabel" id="resultLabel">Estimated result</div>
+      <div class="resultValue" id="resultValue">—</div>
+    </div>
+
+    <div class="infoGrid">
+      <div class="infoMini">
+        <span id="rateLabel">Reference rate</span>
+        <strong id="rateValue">Loading...</strong>
+      </div>
+      <div class="infoMini">
+        <span id="noteLabel">Note</span>
+        <strong id="noteValue">For reference only</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="whyTitle">Why check USD to KHR first?</h2>
+    <p id="whyText">
+      A small difference in exchange rate can make a noticeable difference in the final amount received in Cambodian Riel. Before exchanging money or sending funds to Cambodia, it is a good idea to compare the rate you are offered with a reference market rate.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2 id="tipsTitle">Tips before exchanging money</h2>
+    <ul class="list" id="tipsList">
+      <li>Compare the offered rate with a reference rate.</li>
+      <li>Check whether fees are included in the final amount.</li>
+      <li>For larger amounts, even a small rate difference matters.</li>
+      <li>International transfer services may offer better value than local exchange counters.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2 id="ctaTitle">Need to send money to Cambodia?</h2>
+    <p id="ctaText">
+      If you are sending money internationally, compare transfer services before you decide. A better exchange rate and lower fees can increase the final amount received.
+    </p>
+    <a href="/transfer.html?amount=100&from=USD&to=KHR" class="ctaBtn" id="ctaBtn">Compare transfer services</a>
+  </div>
+
+  <div class="footer" id="footerText">
+    <a href="/send-money-to-cambodia.html">Send money to Cambodia</a> ·
+    <a href="/">Calculator</a> ·
+    <a href="/privacy.html">Privacy</a> ·
+    <a href="/terms.html">Terms</a> ·
+    <a href="/disclaimer.html">Disclaimer</a>
+  </div>
+
+</div>
+
+<script>
+let currentLang = "en";
+let usd_khr = 4016;
+
+const TEXT = {
+  en: {
+    brandTitle: "USD to KHR Guide",
+    brandSub: "Cambodia exchange rate information",
+    back: "← Back to calculator",
+    title: "USD to KHR exchange rate calculator",
+    heroSub: "Check the latest USD to KHR conversion and estimate how much Cambodian Riel you may receive.",
+    amountLabel: "USD amount",
+    calcBtn: "Calculate",
+    resultLabel: "Estimated result",
+    rateLabel: "Reference rate",
+    noteLabel: "Note",
+    noteValue: "For reference only",
+    whyTitle: "Why check USD to KHR first?",
+    whyText: "A small difference in exchange rate can make a noticeable difference in the final amount received in Cambodian Riel. Before exchanging money or sending funds to Cambodia, it is a good idea to compare the rate you are offered with a reference market rate.",
+    tipsTitle: "Tips before exchanging money",
+    tips: [
+      "Compare the offered rate with a reference rate.",
+      "Check whether fees are included in the final amount.",
+      "For larger amounts, even a small rate difference matters.",
+      "International transfer services may offer better value than local exchange counters."
+    ],
+    ctaTitle: "Need to send money to Cambodia?",
+    ctaText: "If you are sending money internationally, compare transfer services before you decide. A better exchange rate and lower fees can increase the final amount received.",
+    ctaBtn: "Compare transfer services"
+  },
+
+  zh: {
+    brandTitle: "USD 到 KHR 指南",
+    brandSub: "柬埔寨汇率信息",
+    back: "← 返回计算器",
+    title: "USD 到 KHR 汇率计算器",
+    heroSub: "查看最新 USD 到 KHR 换算，估算你大概能拿到多少柬埔寨瑞尔。",
+    amountLabel: "美元金额",
+    calcBtn: "计算",
+    resultLabel: "估算结果",
+    rateLabel: "参考汇率",
+    noteLabel: "说明",
+    noteValue: "仅供参考",
+    whyTitle: "为什么先看 USD 到 KHR？",
+    whyText: "即使很小的汇率差异，也会让最终拿到的柬埔寨瑞尔金额出现明显变化。在换钱或向柬埔寨汇款之前，先把报价和参考汇率做对比，通常更稳妥。",
+    tipsTitle: "换钱前的建议",
+    tips: [
+      "把对方报价和参考汇率做比较。",
+      "确认手续费是否已算进最终金额。",
+      "金额越大，小小的汇率差异影响越大。",
+      "国际转账服务有时比本地换汇点更划算。"
+    ],
+    ctaTitle: "需要向柬埔寨转账吗？",
+    ctaText: "如果你要国际汇款，建议先比较不同转账服务。更好的汇率和更低的手续费，都会提高最终到账金额。",
+    ctaBtn: "比较转账服务"
+  },
+
+  km: {
+    brandTitle: "មគ្គុទេសក៍ USD ទៅ KHR",
+    brandSub: "ព័ត៌មានអត្រាប្តូរប្រាក់កម្ពុជា",
+    back: "← ត្រឡប់ទៅម៉ាស៊ីនគណនា",
+    title: "ម៉ាស៊ីនគណនា USD ទៅ KHR",
+    heroSub: "ពិនិត្យការបម្លែង USD ទៅ KHR និងប៉ាន់ស្មានថាអ្នកអាចទទួលបានប្រាក់រៀលប៉ុន្មាន។",
+    amountLabel: "ចំនួន USD",
+    calcBtn: "គណនា",
+    resultLabel: "លទ្ធផលប៉ាន់ស្មាន",
+    rateLabel: "អត្រាយោង",
+    noteLabel: "ចំណាំ",
+    noteValue: "សម្រាប់យោងប៉ុណ្ណោះ",
+    whyTitle: "ហេតុអ្វីត្រូវពិនិត្យ USD ទៅ KHR មុន?",
+    whyText: "ភាពខុសគ្នាតិចតួចនៃអត្រាប្តូរប្រាក់អាចប៉ះពាល់យ៉ាងច្បាស់ដល់ចំនួនប្រាក់រៀលដែលអ្នកទទួលបានចុងក្រោយ។ មុនពេលប្តូរប្រាក់ ឬផ្ញើប្រាក់ទៅកម្ពុជា គួរប្រៀបធៀបអត្រាដែលអ្នកទទួលបានជាមួយអត្រាយោងសិន។",
+    tipsTitle: "គន្លឹះមុនពេលប្តូរប្រាក់",
+    tips: [
+      "ប្រៀបធៀបអត្រាដែលគេផ្តល់ជាមួយអត្រាយោង។",
+      "ពិនិត្យថាតើថ្លៃសេវាត្រូវបានបញ្ចូលក្នុងចំនួនចុងក្រោយឬអត់។",
+      "សម្រាប់ចំនួនធំ ភាពខុសគ្នានៃអត្រាតិចតួចក៏សំខាន់ដែរ។",
+      "សេវាផ្ទេរប្រាក់អន្តរជាតិអាចផ្តល់តម្លៃល្អជាងកន្លែងប្តូរប្រាក់ខ្លះ។"
+    ],
+    ctaTitle: "ត្រូវការផ្ញើប្រាក់ទៅកម្ពុជាមែនទេ?",
+    ctaText: "បើអ្នកត្រូវផ្ញើប្រាក់អន្តរជាតិ គួរប្រៀបធៀបសេវាផ្ទេរប្រាក់សិន។ អត្រាប្តូរប្រាក់ល្អជាង និងថ្លៃសេវាទាបជាង អាចធ្វើឲ្យអ្នកទទួលបានប្រាក់ច្រើនជាង។",
+    ctaBtn: "ប្រៀបធៀបសេវាផ្ទេរប្រាក់"
+  }
+};
+
+function formatNumber(n, decimals=2){
+  if (typeof n !== "number" || !isFinite(n)) return "—";
+  return n.toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  });
+}
+
+function calculateUSDToKHR(){
+  const amount = parseFloat(document.getElementById("usdAmount").value);
+  if (isNaN(amount)) {
+    document.getElementById("resultValue").innerText = "—";
+    return;
+  }
+
+  const result = amount * usd_khr;
+  document.getElementById("resultValue").innerText =
+    `${formatNumber(amount,2)} USD ≈ ${formatNumber(result,0)} KHR`;
+
+  const cta = document.getElementById("ctaBtn");
+  cta.href = `/transfer.html?amount=${encodeURIComponent(amount)}&from=USD&to=KHR`;
+
+  if (typeof gtag === "function") {
+    gtag("event", "calculate", {
+      from_currency: "USD",
+      to_currency: "KHR",
+      source: "usd_to_khr_page"
+    });
+  }
+}
+
+function setTips(list){
+  const ul = document.getElementById("tipsList");
+  ul.innerHTML = "";
+  list.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    ul.appendChild(li);
+  });
+}
+
+function setLang(lang, userInitiated=false){
+  currentLang = TEXT[lang] ? lang : "en";
+
+  if (userInitiated) {
+    try { localStorage.setItem("lang_pref", currentLang); } catch {}
+  }
+
+  document.getElementById("btnEN").classList.toggle("active", currentLang === "en");
+  document.getElementById("btnKM").classList.toggle("active", currentLang === "km");
+  document.getElementById("btnZH").classList.toggle("active", currentLang === "zh");
+
+  const t = TEXT[currentLang];
+  document.getElementById("brandTitle").innerText = t.brandTitle;
+  document.getElementById("brandSub").innerText = t.brandSub;
+  document.getElementById("backText").innerText = t.back;
+  document.getElementById("title").innerText = t.title;
+  document.getElementById("heroSub").innerText = t.heroSub;
+  document.getElementById("amountLabel").innerText = t.amountLabel;
+  document.getElementById("calcBtn").innerText = t.calcBtn;
+  document.getElementById("resultLabel").innerText = t.resultLabel;
+  document.getElementById("rateLabel").innerText = t.rateLabel;
+  document.getElementById("noteLabel").innerText = t.noteLabel;
+  document.getElementById("noteValue").innerText = t.noteValue;
+  document.getElementById("whyTitle").innerText = t.whyTitle;
+  document.getElementById("whyText").innerText = t.whyText;
+  document.getElementById("tipsTitle").innerText = t.tipsTitle;
+  setTips(t.tips);
+  document.getElementById("ctaTitle").innerText = t.ctaTitle;
+  document.getElementById("ctaText").innerText = t.ctaText;
+  document.getElementById("ctaBtn").innerText = t.ctaBtn;
+}
+
+async function loadRate(){
+  try{
+    const res = await fetch('/api/rate?ts=' + Date.now(), { cache:'no-store' });
+    if (!res.ok) throw new Error('rate error');
+    const data = await res.json();
+    if (data && data.usd_khr) {
+      usd_khr = data.usd_khr;
+    }
+  } catch(e) {}
+  document.getElementById("rateValue").innerText = `1 USD = ${formatNumber(usd_khr,0)} KHR`;
+  calculateUSDToKHR();
+}
+
+document.getElementById("calcBtn").addEventListener("click", calculateUSDToKHR);
+document.getElementById("usdAmount").addEventListener("input", () => {
+  const amount = parseFloat(document.getElementById("usdAmount").value);
+  if (!isNaN(amount)) {
+    const cta = document.getElementById("ctaBtn");
+    cta.href = `/transfer.html?amount=${encodeURIComponent(amount)}&from=USD&to=KHR`;
+  }
+});
+
+(function init(){
+  let initialLang = "en";
+  try{
+    const saved = localStorage.getItem("lang_pref");
+    if (saved && TEXT[saved]) initialLang = saved;
+    else {
+      const l = (navigator.language || "").toLowerCase();
+      if (l.startsWith("zh")) initialLang = "zh";
+      else if (l.startsWith("km")) initialLang = "km";
+    }
+  } catch(e) {}
+  setLang(initialLang, false);
+  loadRate();
+})();
+</script>
+</body>
+</html>
