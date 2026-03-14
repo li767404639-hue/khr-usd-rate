@@ -6,9 +6,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Best Way to Send Money to Cambodia</title>
+<title>Best way to send money to Cambodia</title>
 
-<meta name="description" content="Compare the best ways to send money to Cambodia. Check fees, exchange rates and transfer speed for international money transfer services.">
+<meta name="description"
+content="Compare the best way to send money to Cambodia. Check exchange rates and transfer fees before sending money.">
+
+<meta name="theme-color" content="#0B1F4A">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
 
@@ -22,73 +25,77 @@ gtag('config','G-3BT4GY2B36');
 <style>
 
 body{
+margin:0;
 font-family:system-ui,-apple-system,Segoe UI,Roboto;
 background:#F3F6FB;
-margin:0;
 color:#111827;
 }
 
-.container{
-max-width:900px;
-margin:auto;
-padding:20px;
+.wrap{
+max-width:760px;
+margin:30px auto;
+padding:0 16px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.lang span{
+cursor:pointer;
+padding:6px 10px;
+border-radius:999px;
+border:1px solid #E5E7EB;
+font-size:13px;
+margin-left:6px;
+}
+
+.lang span.active{
+background:#EEF2FF;
 }
 
 .card{
 background:white;
+border-radius:16px;
 padding:20px;
-border-radius:14px;
-margin-bottom:20px;
-box-shadow:0 8px 20px rgba(0,0,0,0.05);
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
 }
 
 h1{
 margin-top:0;
-font-size:26px;
 }
 
-h2{
-font-size:18px;
-margin-top:25px;
+.provider{
+border:1px solid #E5E7EB;
+padding:16px;
+border-radius:12px;
+margin-top:12px;
 }
 
 .btn{
 display:inline-block;
 background:#0B1F4A;
 color:white;
-padding:10px 16px;
+padding:10px 14px;
 border-radius:8px;
 text-decoration:none;
 font-size:14px;
-margin-top:10px;
-}
-
-.provider{
-border:1px solid #E5E7EB;
-border-radius:12px;
-padding:16px;
-margin-top:12px;
-}
-
-.providerTitle{
-font-weight:600;
-font-size:15px;
-}
-
-.badge{
-background:#10B981;
-color:white;
-font-size:11px;
-padding:3px 7px;
-border-radius:6px;
-margin-left:6px;
+margin-top:8px;
 }
 
 .footer{
+margin-top:20px;
 text-align:center;
 font-size:12px;
 color:#6B7280;
-margin-top:30px;
+}
+
+.footer a{
+color:#6B7280;
+text-decoration:none;
 }
 
 </style>
@@ -97,115 +104,83 @@ margin-top:30px;
 
 <body>
 
-<div class="container">
+<div class="wrap">
 
-<div class="card">
+<div class="topbar">
 
-<h1>Best way to send money to Cambodia</h1>
+<div>
+<strong id="titleTop">Send money to Cambodia</strong>
+</div>
 
-<p>
-
-If you want to send money to Cambodia from overseas, choosing the right transfer service can save you significant fees and provide a better exchange rate.
-
-</p>
-
-<p>
-
-Many banks charge high fees and poor exchange rates. Modern international transfer services often offer cheaper and faster transfers.
-
-</p>
+<div class="lang">
+<span id="btnEN" onclick="setLang('en')">EN</span>
+<span id="btnKM" onclick="setLang('km')">ខ្មែរ</span>
+<span id="btnZH" onclick="setLang('zh')">中文</span>
+</div>
 
 </div>
 
 <div class="card">
 
-<h2>Recommended transfer services</h2>
+<h1 id="title">
+Best way to send money to Cambodia
+</h1>
+
+<p id="intro">
+Before sending money internationally, it is recommended to compare exchange rates and transfer fees.
+</p>
 
 <div class="provider">
 
-<div class="providerTitle">
+<strong>Wise</strong>
 
-Wise <span class="badge">Recommended</span>
-
-</div>
-
-<p>
-
-Wise offers low transfer fees and real exchange rates. It is one of the most popular services for sending money internationally.
-
+<p id="wiseText">
+Wise offers real exchange rates and low fees for international transfers.
 </p>
 
-<a class="btn" href="https://wise.prf.hn/click/camref:1011l5ECpH" onclick="trackProvider('Wise')">
-
+<a
+href="https://wise.prf.hn/click/camref:1011l5ECpH"
+class="btn"
+onclick="trackTransfer('wise')"
+>
 Send money with Wise
-
 </a>
 
 </div>
 
 <div class="provider">
 
-<div class="providerTitle">
+<strong>Remitly</strong>
 
-Remitly
-
-</div>
-
-<p>
-
-Remitly provides fast transfers and multiple delivery options including bank deposits and cash pickup.
-
+<p id="remitText">
+Remitly provides fast transfers and cash pickup options in Cambodia.
 </p>
 
-<a class="btn" href="#" onclick="trackProvider('Remitly')">
-
+<a
+href="#"
+class="btn"
+onclick="trackTransfer('remitly')"
+>
 Send money with Remitly
-
 </a>
 
 </div>
 
-</div>
+<p style="margin-top:20px">
 
-<div class="card">
-
-<h2>Why compare transfer services?</h2>
-
-<p>
-
-Different providers charge different fees and exchange rates. A small difference in exchange rate can significantly affect how much the recipient receives.
-
-</p>
-
-<p>
-
-Before sending money internationally, it is always recommended to compare transfer services.
-
-</p>
-
-</div>
-
-<div class="card">
-
-<h2>Check exchange rates first</h2>
-
-<p>
-
-Before sending money, you can use our exchange rate calculator to estimate the amount your recipient may receive.
-
-</p>
-
-<a class="btn" href="/">
-
-Open exchange rate calculator
-
+<a href="/" id="backHome">
+Back to exchange calculator
 </a>
+
+</p>
 
 </div>
 
 <div class="footer">
 
-© Currency comparison tool
+<a href="/privacy.html">Privacy</a> ·
+<a href="/terms.html">Terms</a> ·
+<a href="/disclaimer.html">Disclaimer</a>
 
 </div>
 
@@ -213,19 +188,68 @@ Open exchange rate calculator
 
 <script>
 
-function trackProvider(name){
+function trackTransfer(name){
 
-gtag('event','provider_click',{
-
+gtag('event','transfer_click',{
 provider:name,
-page:'send_money_page'
-
+page:'send_money'
 })
 
 }
 
+const i18n={
+
+en:{
+titleTop:"Send money to Cambodia",
+title:"Best way to send money to Cambodia",
+intro:"Before sending money internationally, it is recommended to compare exchange rates and transfer fees.",
+wiseText:"Wise offers real exchange rates and low fees for international transfers.",
+remitText:"Remitly provides fast transfers and cash pickup options in Cambodia.",
+back:"Back to exchange calculator"
+},
+
+km:{
+titleTop:"ផ្ញើប្រាក់ទៅកម្ពុជា",
+title:"វិធីល្អបំផុតក្នុងការផ្ញើប្រាក់ទៅកម្ពុជា",
+intro:"មុនពេលផ្ញើប្រាក់ទៅក្រៅប្រទេស គួរប្រៀបធៀបអត្រាប្តូរប្រាក់ និងថ្លៃសេវា។",
+wiseText:"Wise ផ្តល់អត្រាប្តូរប្រាក់ពិត និងថ្លៃសេវាទាប។",
+remitText:"Remitly អាចផ្ទេរប្រាក់បានលឿន និងមានជម្រើសដកប្រាក់។",
+back:"ត្រឡប់ទៅម៉ាស៊ីនគណនា"
+},
+
+zh:{
+titleTop:"向柬埔寨汇款",
+title:"向柬埔寨汇款的最佳方式",
+intro:"在进行国际汇款之前，建议先比较汇率和转账手续费。",
+wiseText:"Wise 提供真实汇率和较低手续费。",
+remitText:"Remitly 提供快速转账和现金提取服务。",
+back:"返回汇率计算器"
+}
+
+}
+
+function setLang(lang){
+
+document.getElementById("btnEN").classList.remove("active")
+document.getElementById("btnKM").classList.remove("active")
+document.getElementById("btnZH").classList.remove("active")
+
+document.getElementById("btn"+lang.toUpperCase()).classList.add("active")
+
+const t=i18n[lang]
+
+titleTop.innerText=t.titleTop
+title.innerText=t.title
+intro.innerText=t.intro
+wiseText.innerText=t.wiseText
+remitText.innerText=t.remitText
+backHome.innerText=t.back
+
+}
+
+setLang("en")
+
 </script>
 
 </body>
-
 </html>
