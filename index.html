@@ -1159,7 +1159,10 @@ USD to KHR Today: —
       metaEl.innerText =
         `Rates loaded: 1 USD = ${Math.round(usd_khr)} KHR | 1 USD = ${usd_cny.toFixed(4)} CNY`;
 
-     document.getElementById("rateUpdate").innerText =
+     document.getElementById("todayRate").innerText =
+`USD to KHR Today: 1 USD = ${Math.round(usd_khr)} KHR`;
+         
+         document.getElementById("rateUpdate").innerText =
 "Last updated: " + new Date().toLocaleDateString();
       
       renderQuickButtons();
