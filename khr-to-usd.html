@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>KHR to USD Exchange Rate Calculator</title>
+
+<meta name="description"
+content="Free KHR to USD exchange rate calculator. Convert Cambodian Riel to US Dollar instantly.">
+
+<link rel="canonical"
+href="https://khr-usd-rate.vercel.app/khr-to-usd.html">
+
+<meta name="theme-color" content="#0B1F4A">
+<link rel="icon" href="/icon-192.png">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3BT4GY2B36"></script>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3BT4GY2B36');
+</script>
+
+<style>
+
+body{
+font-family:system-ui,-apple-system;
+background:#F3F6FB;
+margin:0;
+}
+
+.wrap{
+max-width:700px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:14px;
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+h1{
+margin-top:0;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #E5E7EB;
+font-size:16px;
+}
+
+button{
+padding:12px 18px;
+background:#0B1F4A;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.result{
+font-size:28px;
+margin-top:10px;
+font-weight:600;
+}
+
+.lang{
+margin-bottom:10px;
+}
+
+.lang span{
+cursor:pointer;
+margin-right:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="lang">
+<span onclick="setLang('en')">EN</span>
+<span onclick="setLang('zh')">中文</span>
+<span onclick="setLang('km')">ខ្មែរ</span>
+</div>
+
+<div class="card">
+
+<h1 id="title">KHR to USD Calculator</h1>
+
+<p id="desc">
+Convert Cambodian Riel to US Dollar instantly.
+</p>
+
+<label id="label">KHR amount</label>
+
+<input id="amount" type="number" value="40000">
+
+<button onclick="calculate()" id="btn">
+Calculate
+</button>
+
+<div class="result" id="result">—</div>
+
+</div>
+
+</div>
+
+<script>
+
+let usd_khr=4000;
+
+const i18n={
+
+en:{
+title:"KHR to USD Calculator",
+desc:"Convert Cambodian Riel to US Dollar instantly.",
+label:"KHR amount",
+btn:"Calculate"
+},
+
+zh:{
+title:"瑞尔换美元计算器",
+desc:"快速计算柬埔寨瑞尔兑换美元。",
+label:"瑞尔金额",
+btn:"计算"
+},
+
+km:{
+title:"គណនា KHR ទៅ USD",
+desc:"គណនាប្រាក់រៀលទៅដុល្លារអាមេរិក",
+label:"ចំនួន KHR",
+btn:"គណនា"
+}
+
+};
+
+function setLang(lang){
+
+document.getElementById("title").innerText=i18n[lang].title;
+document.getElementById("desc").innerText=i18n[lang].desc;
+document.getElementById("label").innerText=i18n[lang].label;
+document.getElementById("btn").innerText=i18n[lang].btn;
+
+}
+
+async function loadRate(){
+
+try{
+
+const r=await fetch('/api/rate');
+
+const data=await r.json();
+
+usd_khr=data.usd_khr;
+
+}catch(e){}
+
+}
+
+function calculate(){
+
+const khr=parseFloat(document.getElementById("amount").value);
+
+const usd=khr/usd_khr;
+
+document.getElementById("result").innerText=
+
+khr.toLocaleString()+" KHR ≈ "+usd.toFixed(2)+" USD";
+
+if(typeof gtag==="function"){
+
+gtag("event","calculate",{
+
+from_currency:"KHR",
+to_currency:"USD"
+
+});
+
+}
+
+}
+
+loadRate();
+calculate();
+
+</script>
+
+</body>
+</html>
