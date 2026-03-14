@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
@@ -5,15 +7,7 @@
 </url>
 
 <url>
-<loc>https://khr-usd-rate.vercel.app/usd-to-khr.html</loc>
-</url>
-
-<url>
-<loc>https://khr-usd-rate.vercel.app/cny-to-khr.html</loc>
-</url>
-
-<url>
-<loc>https://khr-usd-rate.vercel.app/thb-to-khr.html</loc>
+<loc>https://khr-usd-rate.vercel.app/transfer.html</loc>
 </url>
 
 <url>
@@ -21,7 +15,35 @@
 </url>
 
 <url>
-<loc>https://khr-usd-rate.vercel.app/transfer.html</loc>
+<loc>https://khr-usd-rate.vercel.app/usd-to-khr.html</loc>
+</url>
+
+<url>
+<loc>https://khr-usd-rate.vercel.app/khr-to-usd.html</loc>
+</url>
+
+<url>
+<loc>https://khr-usd-rate.vercel.app/cny-to-khr.html</loc>
+</url>
+
+<url>
+<loc>https://khr-usd-rate.vercel.app/usd-to-cny.html</loc>
+</url>
+
+<url>
+<loc>https://khr-usd-rate.vercel.app/thb-to-khr.html</loc>
+</url>
+
+<url>
+<loc>https://khr-usd-rate.vercel.app/privacy.html</loc>
+</url>
+
+<url>
+<loc>https://khr-usd-rate.vercel.app/terms.html</loc>
+</url>
+
+<url>
+<loc>https://khr-usd-rate.vercel.app/disclaimer.html</loc>
 </url>
 
 </urlset>
