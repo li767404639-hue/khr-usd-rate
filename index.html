@@ -24,312 +24,442 @@
 <meta name="theme-color" content="#0B1F4A">
 
 <style>
+  :root{
+    --bg:#F3F6FB;
+    --card:#FFFFFF;
+    --text:#0F172A;
+    --muted:#6B7280;
+    --line:#E5E7EB;
+    --primary:#0B1F4A;
+    --primary2:#123A8A;
+    --btnText:#FFFFFF;
+    --chip:#EEF2FF;
+    --chipText:#1E3A8A;
+    --successBg:#ECFDF3;
+    --successText:#027A48;
+    --warnBg:#FFF7ED;
+    --warnText:#B54708;
+  }
 
-:root{
---bg:#F3F6FB;
---card:#FFFFFF;
---text:#0F172A;
---muted:#6B7280;
---line:#E5E7EB;
---primary:#0B1F4A;
---primary2:#123A8A;
---btnText:#FFFFFF;
---chip:#EEF2FF;
---chipText:#1E3A8A;
---successBg:#ECFDF3;
---successText:#027A48;
---warnBg:#FFF7ED;
---warnText:#B54708;
-}
+  *{ box-sizing:border-box; }
 
-*{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    background: radial-gradient(1200px 600px at 20% 0%, #EAF0FF 0%, var(--bg) 45%, var(--bg) 100%);
+    color:var(--text);
+  }
 
-body{
-margin:0;
-font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-background:radial-gradient(1200px 600px at 20% 0%,#EAF0FF 0%,var(--bg) 45%,var(--bg) 100%);
-color:var(--text);
-}
+  .wrap{
+    max-width:760px;
+    margin:28px auto;
+    padding:0 16px 28px;
+  }
 
-.wrap{
-max-width:760px;
-margin:28px auto;
-padding:0 16px 28px;
-}
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+    gap:12px;
+  }
 
-.topbar{
-display:flex;
-align-items:center;
-justify-content:space-between;
-margin-bottom:12px;
-gap:12px;
-}
+  .brand{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    min-width:0;
+  }
 
-.brand{
-display:flex;
-gap:10px;
-align-items:center;
-min-width:0;
-}
+  .logo{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 20px rgba(11,31,74,.25);
+    flex:0 0 auto;
+  }
 
-.logo{
-width:40px;
-height:40px;
-border-radius:12px;
-background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);
-display:flex;
-align-items:center;
-justify-content:center;
-box-shadow:0 8px 20px rgba(11,31,74,.25);
-flex:0 0 auto;
-}
+  .brand h1{
+    font-size:16px;
+    margin:0;
+    letter-spacing:.2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
 
-.brand h1{
-font-size:16px;
-margin:0;
-letter-spacing:.2px;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
+  .lang{
+    font-size:13px;
+    user-select:none;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex:0 0 auto;
+  }
 
-.lang{
-font-size:13px;
-user-select:none;
-display:flex;
-gap:8px;
-align-items:center;
-flex:0 0 auto;
-}
+  .lang span{
+    cursor:pointer;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--muted);
+  }
 
-.lang span{
-cursor:pointer;
-padding:6px 10px;
-border-radius:999px;
-border:1px solid var(--line);
-background:#fff;
-color:var(--muted);
-}
+  .lang span.active{
+    border-color: rgba(11,31,74,.25);
+    background: var(--chip);
+    color: var(--chipText);
+  }
 
-.lang span.active{
-border-color:rgba(11,31,74,.25);
-background:var(--chip);
-color:var(--chipText);
-}
+  .card{
+    background:var(--card);
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 14px 40px rgba(15,23,42,.06);
+  }
 
-.card{
-background:var(--card);
-border:1px solid rgba(229,231,235,.9);
-border-radius:18px;
-padding:18px;
-box-shadow:0 14px 40px rgba(15,23,42,.06);
-}
+  .meta{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.4;
+    margin-bottom:14px;
+  }
 
-.meta{
-font-size:12px;
-color:var(--muted);
-line-height:1.4;
-margin-bottom:14px;
-}
+  .meta.clickable{
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:2px;
+  }
 
-.meta.clickable{
-cursor:pointer;
-text-decoration:underline;
-text-underline-offset:2px;
-}
+  .hint{
+    margin:4px 0 14px;
+    font-size:13px;
+    color:#111827;
+  }
 
-.hint{
-margin:4px 0 14px;
-font-size:13px;
-color:#111827;
-}
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap:10px;
+    align-items:end;
+  }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr auto;
-gap:10px;
-align-items:end;
-}
+  label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
 
-label{
-display:block;
-font-size:12px;
-color:var(--muted);
-margin-bottom:6px;
-}
+  select, input{
+    width:100%;
+    padding:12px 12px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    font-size:16px;
+    outline:none;
+    background:#fff;
+  }
 
-select,input{
-width:100%;
-padding:12px 12px;
-border:1px solid var(--line);
-border-radius:14px;
-font-size:16px;
-outline:none;
-background:#fff;
-}
+  select:focus, input:focus{
+    border-color:rgba(11,31,74,.35);
+    box-shadow:0 0 0 4px rgba(11,31,74,.08);
+  }
 
-select:focus,input:focus{
-border-color:rgba(11,31,74,.35);
-box-shadow:0 0 0 4px rgba(11,31,74,.08);
-}
+  .swapBtn{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:#fff;
+    cursor:pointer;
+    font-size:18px;
+  }
 
-.swapBtn{
-width:48px;
-height:48px;
-border-radius:14px;
-border:1px solid var(--line);
-background:#fff;
-cursor:pointer;
-font-size:18px;
-}
+  .swapBtn:active{
+    transform: translateY(1px);
+  }
 
-.amountRow{
-margin-top:10px;
-}
+  .amountRow{
+    margin-top:10px;
+  }
 
-.quick{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-margin-top:10px;
-}
+  .quick{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
 
-.chip{
-padding:8px 10px;
-border-radius:999px;
-border:1px solid rgba(11,31,74,.16);
-background:var(--chip);
-color:var(--chipText);
-font-size:13px;
-cursor:pointer;
-}
+  .chip{
+    padding:8px 10px;
+    border-radius:999px;
+    border:1px solid rgba(11,31,74,.16);
+    background:var(--chip);
+    color:var(--chipText);
+    font-size:13px;
+    cursor:pointer;
+  }
 
-.resultBox{
-margin-top:14px;
-border:1px solid rgba(229,231,235,.9);
-border-radius:16px;
-padding:14px 14px;
-background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%);
-}
+  .chip:active{
+    transform: translateY(1px);
+  }
 
-.result{
-font-size:30px;
-font-weight:650;
-letter-spacing:.2px;
-line-height:1.1;
-}
+  .resultBox{
+    margin-top:14px;
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:16px;
+    padding:14px 14px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBFCFF 100%);
+  }
 
-.copyBtn{
-border:none;
-border-radius:14px;
-padding:12px 14px;
-background:var(--primary);
-color:var(--btnText);
-font-size:14px;
-cursor:pointer;
-}
+  .resultLabel{
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
 
-.compareBox{
-margin-top:14px;
-border:1px solid rgba(229,231,235,.9);
-border-radius:16px;
-padding:14px;
-background:#fff;
-}
+  .resultRow{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    justify-content:space-between;
+  }
 
-.transferTest{
-margin-top:14px;
-border:1px solid rgba(229,231,235,.9);
-border-radius:16px;
-padding:14px;
-background:#fff;
-}
+  .result{
+    font-size:30px;
+    font-weight:650;
+    letter-spacing:.2px;
+    line-height:1.1;
+    flex:1;
+    word-break:break-word;
+  }
 
-.transferBtn{
-width:100%;
-border:none;
-border-radius:14px;
-padding:12px 14px;
-background:var(--primary);
-color:var(--btnText);
-font-size:14px;
-cursor:pointer;
-}
+  .copyBtn{
+    border:none;
+    border-radius:14px;
+    padding:12px 14px;
+    background:var(--primary);
+    color:var(--btnText);
+    font-size:14px;
+    cursor:pointer;
+    min-width:88px;
+  }
 
-/* ===== Guides Cards ===== */
+  .copyBtn:hover{
+    background:var(--primary2);
+  }
 
-.guidesWrap{
-margin-top:30px;
-padding-top:20px;
-border-top:1px solid #E5E7EB;
-}
+  .copyBtn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+  }
 
-.guidesTitle{
-font-size:14px;
-font-weight:600;
-margin-bottom:12px;
-text-align:center;
-}
+  .sub{
+    margin-top:10px;
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.45;
+  }
 
-.guidesGrid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
+  .compareBox{
+    margin-top:14px;
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:16px;
+    padding:14px;
+    background:#fff;
+  }
 
-.guideCard{
-display:block;
-text-decoration:none;
-color:#111827;
-background:#fff;
-border:1px solid #E5E7EB;
-border-radius:14px;
-padding:12px 14px;
-font-size:14px;
-line-height:1.4;
-transition:all .18s ease;
-box-shadow:0 4px 12px rgba(15,23,42,.04);
-}
+  .compareTitle{
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:10px;
+  }
 
-.guideCard:hover{
-border-color:rgba(11,31,74,.22);
-background:#F8FAFF;
-transform:translateY(-1px);
-}
+  .compareGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    align-items:end;
+  }
 
-.footer{
-margin-top:16px;
-text-align:center;
-font-size:12px;
-color:var(--muted);
-}
+  .compareMini{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px;
+    background:#FBFCFF;
+  }
 
-.footer a{
-color:var(--muted);
-text-decoration:none;
-}
+  .compareMini span{
+    display:block;
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:5px;
+  }
 
-.footer a:hover{
-text-decoration:underline;
-}
+  .compareMini strong{
+    display:block;
+    font-size:14px;
+    color:#111827;
+    word-break:break-word;
+  }
 
-@media (max-width:640px){
+  .lossRow{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
 
-.compareGrid,
-.lossRow{
-grid-template-columns:1fr;
-}
+  .lossBox, .saveBox{
+    border-radius:14px;
+    padding:10px 12px;
+  }
 
-.result{
-font-size:26px;
-}
+  .lossBox{
+    background:var(--warnBg);
+    color:var(--warnText);
+  }
 
-.guidesGrid{
-grid-template-columns:1fr;
-}
+  .saveBox{
+    background:var(--successBg);
+    color:var(--successText);
+  }
 
-}
+  .lossBox span, .saveBox span{
+    display:block;
+    font-size:11px;
+    opacity:.9;
+    margin-bottom:4px;
+  }
 
+  .lossBox strong, .saveBox strong{
+    display:block;
+    font-size:15px;
+  }
+
+  .transferTest{
+    margin-top:14px;
+    border:1px solid rgba(229,231,235,.9);
+    border-radius:16px;
+    padding:14px 14px;
+    background:#fff;
+  }
+
+  .transferText{
+    font-size:13px;
+    color:#111827;
+    margin-bottom:6px;
+    font-weight:600;
+  }
+
+  .transferHint{
+    font-size:12px;
+    color:#6B7280;
+    margin-bottom:10px;
+    line-height:1.45;
+  }
+
+  .transferBtn{
+    width:100%;
+    border:none;
+    border-radius:14px;
+    padding:12px 14px;
+    background:var(--primary);
+    color:var(--btnText);
+    font-size:14px;
+    cursor:pointer;
+  }
+
+  .transferBtn:hover{
+    background:var(--primary2);
+  }
+
+  .guidesWrap{
+    margin-top:30px;
+    padding-top:20px;
+    border-top:1px solid #E5E7EB;
+  }
+
+  .guidesTitle{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:12px;
+    text-align:center;
+  }
+
+  .guidesGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .guideCard{
+    display:block;
+    text-decoration:none;
+    color:#111827;
+    background:#fff;
+    border:1px solid #E5E7EB;
+    border-radius:14px;
+    padding:12px 14px;
+    line-height:1.4;
+    transition:all .18s ease;
+    box-shadow:0 4px 12px rgba(15,23,42,.04);
+  }
+
+  .guideCard:hover{
+    border-color:rgba(11,31,74,.22);
+    background:#F8FAFF;
+    transform:translateY(-1px);
+  }
+
+  .guideCardTitle{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+    color:#111827;
+    margin-bottom:4px;
+  }
+
+  .guideCardSub{
+    display:block;
+    font-size:12px;
+    color:#6B7280;
+  }
+
+  .footer{
+    margin-top:16px;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .footer a{
+    color:var(--muted);
+    text-decoration:none;
+  }
+
+  .footer a:hover{
+    text-decoration:underline;
+  }
+
+  @media (max-width: 640px){
+    .compareGrid,
+    .lossRow,
+    .guidesGrid{
+      grid-template-columns:1fr;
+    }
+
+    .result{
+      font-size:26px;
+    }
+  }
 </style>
 </head>
 
@@ -442,44 +572,38 @@ grid-template-columns:1fr;
       <button class="transferBtn" id="transferBtn" type="button">Compare transfer fees</button>
     </div>
 
-    <div style="margin-top:30px;padding-top:20px;border-top:1px solid #E5E7EB">
-      <div style="font-size:14px;font-weight:600;margin-bottom:10px;text-align:center">
-        Useful guides
-      </div>
+    <div class="guidesWrap">
+      <div class="guidesTitle" id="guidesTitle">Useful guides</div>
 
-      <div style="text-align:center;font-size:14px;line-height:1.8">
-        <a href="/send-money-to-cambodia.html">
-          Best way to send money to Cambodia
+      <div class="guidesGrid">
+        <a class="guideCard" href="/send-money-to-cambodia.html" id="guideSendMoney">
+          <span class="guideCardTitle" id="guideSendMoneyTitle">Best way to send money to Cambodia</span>
+          <span class="guideCardSub" id="guideSendMoneySub">Transfer guide</span>
         </a>
 
-        <br>
-
-        <a href="/usd-to-khr.html">
-          USD to KHR exchange rate guide
+        <a class="guideCard" href="/usd-to-khr.html" id="guideUsdKhr">
+          <span class="guideCardTitle" id="guideUsdKhrTitle">USD to KHR exchange rate guide</span>
+          <span class="guideCardSub" id="guideUsdKhrSub">Exchange guide</span>
         </a>
 
-        <br>
-
-        <a href="/khr-to-usd.html">
-          KHR to USD exchange rate guide
+        <a class="guideCard" href="/khr-to-usd.html" id="guideKhrUsd">
+          <span class="guideCardTitle" id="guideKhrUsdTitle">KHR to USD exchange rate guide</span>
+          <span class="guideCardSub" id="guideKhrUsdSub">Exchange guide</span>
         </a>
 
-        <br>
-
-        <a href="/cny-to-khr.html">
-          CNY to KHR exchange rate guide
+        <a class="guideCard" href="/cny-to-khr.html" id="guideCnyKhr">
+          <span class="guideCardTitle" id="guideCnyKhrTitle">CNY to KHR exchange rate guide</span>
+          <span class="guideCardSub" id="guideCnyKhrSub">Exchange guide</span>
         </a>
 
-        <br>
-
-        <a href="/usd-to-cny.html">
-          USD to CNY exchange rate guide
+        <a class="guideCard" href="/usd-to-cny.html" id="guideUsdCny">
+          <span class="guideCardTitle" id="guideUsdCnyTitle">USD to CNY exchange rate guide</span>
+          <span class="guideCardSub" id="guideUsdCnySub">Exchange guide</span>
         </a>
 
-        <br>
-
-        <a href="/thb-to-khr.html">
-          THB to KHR exchange rate guide
+        <a class="guideCard" href="/thb-to-khr.html" id="guideThbKhr">
+          <span class="guideCardTitle" id="guideThbKhrTitle">THB to KHR exchange rate guide</span>
+          <span class="guideCardSub" id="guideThbKhrSub">Exchange guide</span>
         </a>
       </div>
     </div>
@@ -537,7 +661,21 @@ grid-template-columns:1fr;
       lblYouReceiveOffered: "At offered rate",
       lblEstimatedLoss: "Estimated difference",
       lblBetterRate: "Potential extra value at reference rate",
-      compareSub: "Editable estimate for comparison only. You can replace the offered rate with the actual shop / bank rate you receive."
+      compareSub: "Editable estimate for comparison only. You can replace the offered rate with the actual shop / bank rate you receive.",
+
+      guidesTitle: "Useful guides",
+      guideSendMoneyTitle: "Best way to send money to Cambodia",
+      guideSendMoneySub: "Transfer guide",
+      guideUsdKhrTitle: "USD to KHR exchange rate guide",
+      guideUsdKhrSub: "Exchange guide",
+      guideKhrUsdTitle: "KHR to USD exchange rate guide",
+      guideKhrUsdSub: "Exchange guide",
+      guideCnyKhrTitle: "CNY to KHR exchange rate guide",
+      guideCnyKhrSub: "Exchange guide",
+      guideUsdCnyTitle: "USD to CNY exchange rate guide",
+      guideUsdCnySub: "Exchange guide",
+      guideThbKhrTitle: "THB to KHR exchange rate guide",
+      guideThbKhrSub: "Exchange guide"
     },
 
     km: {
@@ -569,7 +707,21 @@ grid-template-columns:1fr;
       lblYouReceiveOffered: "តាមអត្រាដែលគេផ្តល់",
       lblEstimatedLoss: "ភាពខុសគ្នាប៉ាន់ស្មាន",
       lblBetterRate: "តម្លៃបន្ថែមប្រសិនបើប្រើអត្រាយោង",
-      compareSub: "សម្រាប់ប៉ាន់ស្មានប៉ុណ្ណោះ។ អ្នកអាចកែអត្រានេះទៅតាមអត្រាពិតពីហាង ឬធនាគារ។"
+      compareSub: "សម្រាប់ប៉ាន់ស្មានប៉ុណ្ណោះ។ អ្នកអាចកែអត្រានេះទៅតាមអត្រាពិតពីហាង ឬធនាគារ។",
+
+      guidesTitle: "មគ្គុទេសក៍មានប្រយោជន៍",
+      guideSendMoneyTitle: "វិធីល្អបំផុតក្នុងការផ្ញើប្រាក់ទៅកម្ពុជា",
+      guideSendMoneySub: "មគ្គុទេសក៍ផ្ទេរប្រាក់",
+      guideUsdKhrTitle: "មគ្គុទេសក៍អត្រាប្តូរ USD ទៅ KHR",
+      guideUsdKhrSub: "មគ្គុទេសក៍អត្រាប្តូរ",
+      guideKhrUsdTitle: "មគ្គុទេសក៍អត្រាប្តូរ KHR ទៅ USD",
+      guideKhrUsdSub: "មគ្គុទេសក៍អត្រាប្តូរ",
+      guideCnyKhrTitle: "មគ្គុទេសក៍អត្រាប្តូរ CNY ទៅ KHR",
+      guideCnyKhrSub: "មគ្គុទេសក៍អត្រាប្តូរ",
+      guideUsdCnyTitle: "មគ្គុទេសក៍អត្រាប្តូរ USD ទៅ CNY",
+      guideUsdCnySub: "មគ្គុទេសក៍អត្រាប្តូរ",
+      guideThbKhrTitle: "មគ្គុទេសក៍អត្រាប្តូរ THB ទៅ KHR",
+      guideThbKhrSub: "មគ្គុទេសក៍អត្រាប្តូរ"
     },
 
     zh: {
@@ -601,7 +753,21 @@ grid-template-columns:1fr;
       lblYouReceiveOffered: "按报价汇率可拿到",
       lblEstimatedLoss: "预估差额",
       lblBetterRate: "按参考汇率可多拿",
-      compareSub: "仅供估算对比。你可以把这里改成你实际拿到的换汇店/银行报价。"
+      compareSub: "仅供估算对比。你可以把这里改成你实际拿到的换汇店/银行报价。",
+
+      guidesTitle: "实用指南",
+      guideSendMoneyTitle: "向柬埔寨汇款的最佳方式",
+      guideSendMoneySub: "汇款指南",
+      guideUsdKhrTitle: "美元兑瑞尔汇率指南",
+      guideUsdKhrSub: "汇率指南",
+      guideKhrUsdTitle: "瑞尔兑美元汇率指南",
+      guideKhrUsdSub: "汇率指南",
+      guideCnyKhrTitle: "人民币兑瑞尔汇率指南",
+      guideCnyKhrSub: "汇率指南",
+      guideUsdCnyTitle: "美元兑人民币汇率指南",
+      guideUsdCnySub: "汇率指南",
+      guideThbKhrTitle: "泰铢兑瑞尔汇率指南",
+      guideThbKhrSub: "汇率指南"
     }
   };
 
@@ -610,6 +776,28 @@ grid-template-columns:1fr;
     if (raw.startsWith("km")) return "km";
     if (raw.startsWith("zh")) return "zh";
     return "en";
+  }
+
+  function updateGuidesLang() {
+    document.getElementById("guidesTitle").innerText = i18n[currentLang].guidesTitle;
+
+    document.getElementById("guideSendMoneyTitle").innerText = i18n[currentLang].guideSendMoneyTitle;
+    document.getElementById("guideSendMoneySub").innerText = i18n[currentLang].guideSendMoneySub;
+
+    document.getElementById("guideUsdKhrTitle").innerText = i18n[currentLang].guideUsdKhrTitle;
+    document.getElementById("guideUsdKhrSub").innerText = i18n[currentLang].guideUsdKhrSub;
+
+    document.getElementById("guideKhrUsdTitle").innerText = i18n[currentLang].guideKhrUsdTitle;
+    document.getElementById("guideKhrUsdSub").innerText = i18n[currentLang].guideKhrUsdSub;
+
+    document.getElementById("guideCnyKhrTitle").innerText = i18n[currentLang].guideCnyKhrTitle;
+    document.getElementById("guideCnyKhrSub").innerText = i18n[currentLang].guideCnyKhrSub;
+
+    document.getElementById("guideUsdCnyTitle").innerText = i18n[currentLang].guideUsdCnyTitle;
+    document.getElementById("guideUsdCnySub").innerText = i18n[currentLang].guideUsdCnySub;
+
+    document.getElementById("guideThbKhrTitle").innerText = i18n[currentLang].guideThbKhrTitle;
+    document.getElementById("guideThbKhrSub").innerText = i18n[currentLang].guideThbKhrSub;
   }
 
   function setLang(lang, userInitiated=false) {
@@ -654,6 +842,8 @@ grid-template-columns:1fr;
     document.getElementById("lblEstimatedLoss").innerText = i18n[currentLang].lblEstimatedLoss;
     document.getElementById("lblBetterRate").innerText = i18n[currentLang].lblBetterRate;
     document.getElementById("compareSub").innerText = i18n[currentLang].compareSub;
+
+    updateGuidesLang();
 
     const fromVal = document.getElementById("from").value || "USD";
     const toVal = document.getElementById("to").value || "KHR";
