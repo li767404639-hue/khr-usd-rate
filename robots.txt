@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://khr-usd-rate.vercel.app/sitemap.xml
